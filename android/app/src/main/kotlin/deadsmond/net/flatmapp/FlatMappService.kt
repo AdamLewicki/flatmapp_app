@@ -38,7 +38,6 @@ class FlatMappService : IntentService("FlatMapp Service"){
     private lateinit var wifiManager: WifiManager
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private var isRunning:Boolean = true
-    private var _lastModified:Long = -1L
 
 
     override fun onCreate(){
@@ -289,7 +288,8 @@ class FlatMappService : IntentService("FlatMapp Service"){
             fusedLocationClient.lastLocation
                     .addOnSuccessListener { location: Location? ->
                         if (location != null) {
-                            showLog("get location")
+                            showLog("latitude: ${location.latitude}, longitude:${location.longitude}")
+                            showLog(markers.keys.toString())
                             for(key in markers.keys)
                             {
                                 val marker = markers[key]

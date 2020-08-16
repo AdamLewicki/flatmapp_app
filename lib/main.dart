@@ -77,7 +77,7 @@ main() async {
 
   if(PrefService.getBool('isolate_enabled') && !PrefService.getBool('isolate_spawned')){
 
-    triggerEntryPoint(null);
+//    triggerEntryPoint(null);
 
     // initiate isolated subprocess
     // ignore: unused_local_variable
