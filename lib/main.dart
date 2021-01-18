@@ -1,5 +1,4 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
-import 'package:flatmapp/resources/extensions.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/languages_localizations_delegate.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/routes/AboutRoute.dart';
@@ -19,9 +18,7 @@ import 'package:flatmapp/resources/routes/SettingsRoute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter\_localizations/flutter\_localizations.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:global_configuration/global_configuration.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:preferences/preferences.dart';
 
 // store chosen starting route
@@ -44,14 +41,14 @@ void _setUserPosition() async {
 //    }
 //  });
 
-  bool _geoEnabled = await Geolocator().isLocationServiceEnabled();
-  if (_geoEnabled) {
-    Position _position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    _markerLoader.addTemporaryMarker(_position.toLatLng());
-    // send position to garbage collector
-    _position = null;
-  }
+//  bool _geoEnabled = await Geolocator().isLocationServiceEnabled();
+//  if (_geoEnabled) {
+//    Position _position = await Geolocator()
+//        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+//    _markerLoader.addTemporaryMarker(_position.toLatLng());
+//    // send position to garbage collector
+//    _position = null;
+//  }
 }
 
 // =============================================================================
@@ -125,11 +122,17 @@ main() async {
 
   await _markerLoader.loadMarkers();
 
-  // check permission
-  if (!(await Permission.location.request().isGranted)) {
-    // request access to location
-    Permission.location.request();
-  }
+//  // check location permission
+//  if (!(await Permission.location.request().isGranted)) {
+//    // request access to location
+//    Permission.location.request();
+//  }
+//
+//  // check dnd permission
+//  if (await FlutterDnd.isNotificationPolicyAccessGranted) {
+//  } else {
+//    FlutterDnd.gotoPolicySettings();
+//  }
 
   _setUserPosition();
 

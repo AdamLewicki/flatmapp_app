@@ -3,7 +3,6 @@ import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
-import 'package:flatmapp/resources/objects/widgets/licence_alert.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -170,7 +169,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
   @override
   Widget build(BuildContext context) {
     // show licence agreement
-    Future.delayed(Duration.zero, () => showLicenceAgreement(context));
+//    Future.delayed(Duration.zero, () => showLicenceAgreement(context));
     return Scaffold(
       appBar: appBar(),
       body: Padding(

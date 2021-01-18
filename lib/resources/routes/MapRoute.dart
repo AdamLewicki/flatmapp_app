@@ -75,6 +75,8 @@ class _MapRouteState extends State<MapRoute> {
 
     // update camera position
     updateCameraPosition();
+
+    Future.delayed(Duration.zero, () => showLicenceAgreement(context));
   }
 
   // ===========================================================================
@@ -630,8 +632,7 @@ class _MapRouteState extends State<MapRoute> {
     );
 
     // show licence agreement
-    Future.delayed(Duration.zero, () => showLicenceAgreement(context));
-
+//    Future.delayed(Duration.zero, () => showLicenceAgreement(context));
     return Scaffold(
       appBar: appBar(),
       body:

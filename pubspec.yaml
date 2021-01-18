@@ -67,6 +67,8 @@ dependencies:
     sdk: flutter
   # open app store in about section
   launch_review: ^1.0.1
+  # do not disturb settings management
+  flutter_dnd: ^0.1.3
 
 dev_dependencies:
   flutter_driver:

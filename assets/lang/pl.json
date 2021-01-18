@@ -144,8 +144,11 @@
   "---------------": "nowe linie należy dodać po tej linii, aby dodać je do innych słowników",
   "new line of text": "chwilowechwilowechwilowe",
 
-  "Licence header": "Licence agreement",
-  "Licence text": "By accepting this agreement, you allow FlatMapp to: \n1. collect location data to enable activation of set tags to send notifications,\n2. manage wi-fi, bluetooth and/or phone volume even when the application is closed or not used.\nApp can not be used without previous acceptance of this agreement.",
-  "Licence accept": "Accept licence",
-  "Licence dismiss": "Close app"
+  "Licence header": "Umowa licencyjna",
+  "Licence text": "Akceptując tą umowę zgadzasz się, aby FlatMapp: \n1. zbierał dane o lokalizacji, aby umożliwić aktywację ustawionych tagów do wysyłania powiadomień,\n2. zarządzania wi-fi, bluetooth'em oraz głośnością telefonu nawet gdy aplikacja jest zamknięta lub w tle.\nBez akceptacji tych warunków nie można kożystać z aplikacji.",
+  "Licence accept": "Zaakceptuj",
+  "Licence dismiss": "Zamknij",
+  "Let's start": "Zacznijmy",
+  "pop up title": "Samouczek!",
+  "pop up content": "Samouczek jest w trakcie tworzenia. Będziesz mógł go zobaczyć na naszej stronie na facebooku:\n do dodania"
 }
