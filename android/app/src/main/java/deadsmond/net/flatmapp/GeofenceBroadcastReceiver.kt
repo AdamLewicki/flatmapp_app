@@ -52,7 +52,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 val markerFile = File(markerPath + "/marker_storage.json")
                 val markerMap = HashMap<String, ArrayList<Action>>()
                 val transition = p0[0]?.geofenceTransition
-                Log.i(TAG, markerFile.readText()) // Log to be erased later
+//                Log.i(TAG, transition.toString())
+//                Log.i(TAG, markerFile.readText()) // Log to be erased later
                 for(geofence:Geofence in p0[0]?.triggeringGeofences!!)
                 {
                     val geo:Geofence = geofence
@@ -146,10 +147,13 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                         {
                             "notification" ->
                             {
-                                notificationHelper.sendHighPriorityNotification(action.params[0],
-                                        action.params[1], MainActivity::class.java)
-                                Log.i(TAG, "Flatmapp called notification action. Title: " +
-                                        "${action.params[0]}, body: ${action.params[1]}")
+                                if(((action.params[2] == "false"||  action.params[2] == "") && transition == 4) ||
+                                        (action.params[2] == "true" && transition == 2)) {
+                                    notificationHelper.sendHighPriorityNotification(action.params[0],
+                                            action.params[1], MainActivity::class.java)
+                                    Log.i(TAG, "Flatmapp called notification action. Title: " +
+                                            "${action.params[0]}, body: ${action.params[1]}")
+                                }
                             }
 //                            "sound" ->
 //                            {
@@ -178,17 +182,19 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                             "wi-fi" ->
                             {
                                 Log.i(TAG, "Flatmapp called wifi action")
-                                if(action.params[0] != "")
-                                {
-                                    when(action.params[0]) {
-                                        "false" -> {
-                                            disableWIFI()
-                                        }
-                                        "true" -> {
-                                            enableWIFI()
-                                        }
-                                        else -> {
-                                            enableWIFI()
+                                if(((action.params[1] == "false"||  action.params[1] == "") && transition == 4) ||
+                                        (action.params[1] == "true" && transition == 2)) {
+                                    if (action.params[0] != "") {
+                                        when (action.params[0]) {
+                                            "false" -> {
+                                                disableWIFI()
+                                            }
+                                            "true" -> {
+                                                enableWIFI()
+                                            }
+                                            else -> {
+                                                enableWIFI()
+                                            }
                                         }
                                     }
                                 }
@@ -196,21 +202,19 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                             "bluetooth" ->
                             {
                                 Log.i(TAG, "Flatmapp called bluetooth action")
-                                if(action.params[0] != "")
-                                {
-                                    when(action.params[0])
-                                    {
-                                        "false" ->
-                                        {
-                                            disableBluetooth()
-                                        }
-                                        "true" ->
-                                        {
-                                            enableBluetooth()
-                                        }
-                                        else ->
-                                        {
-                                            enableBluetooth()
+                                if(((action.params[1] == "false"||  action.params[1] == "") && transition == 4) ||
+                                        (action.params[1] == "true" && transition == 2)) {
+                                    if (action.params[0] != "") {
+                                        when (action.params[0]) {
+                                            "false" -> {
+                                                disableBluetooth()
+                                            }
+                                            "true" -> {
+                                                enableBluetooth()
+                                            }
+                                            else -> {
+                                                enableBluetooth()
+                                            }
                                         }
                                     }
                                 }
@@ -218,13 +222,17 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                             "mute" ->
                             {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                                    mutePhone()
+                                    if(((action.params[0] == "false"||  action.params[0] == "") && transition == 4) ||
+                                            (action.params[0] == "true" && transition == 2))
+                                        mutePhone()
                                     Log.i(TAG, "Flatmapp called mute phone action")
                                 }
                             }
                             "unmute" ->
                             {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                                    if(((action.params[0] == "false"||  action.params[0] == "") && transition == 4) ||
+                                            (action.params[0] == "true" && transition == 2))
                                     unmutePhone()
                                     Log.i(TAG, "Flatmapp called unmute phone action")
                                 }
@@ -233,6 +241,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                             {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                                     try{
+                                        if(((action.params[1] == "false"||  action.params[1] == "") && transition == 4) ||
+                                                (action.params[1] == "true" && transition == 2))
                                         setAlarmVolume(action.params[0].toDouble())
                                         Log.i(TAG, "Flatmapp called change alarm volume" +
                                                 " action")
@@ -245,6 +255,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                             {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                                     try{
+                                        if(((action.params[1] == "false"||  action.params[1] == "") && transition == 4) ||
+                                                (action.params[1] == "true" && transition == 2))
                                         setRingVolume(action.params[0].toDouble())
                                         Log.i(TAG, "Flatmapp called change ringtone volume " +
                                                 "action")
@@ -257,6 +269,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                             {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                                     try{
+                                        if(((action.params[1] == "false"||  action.params[1] == "") && transition == 4) ||
+                                                (action.params[1] == "true" && transition == 2))
                                         setMusicVolume(action.params[0].toDouble())
                                         Log.i(TAG, "Flatmapp called change multimedia volume" +
                                                 " action")
@@ -268,6 +282,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                             "single sound" ->
                             {
                                 try{
+                                    if(((action.params[0] == "false"||  action.params[0] == "") && transition == 4) ||
+                                            (action.params[0] == "true" && transition == 2))
                                     playSound()
                                     Log.i(TAG, "Flatmapp called play single sound" +
                                             " action")
@@ -296,7 +312,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         {
             try{
                 val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                audioManager.ringerMode = AudioManager.RINGER_MODE_SILENT;
+                audioManager.ringerMode = AudioManager.RINGER_MODE_SILENT
             }catch(e:SecurityException){
                 Log.i(TAG, e.toString())
             }
@@ -307,7 +323,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         {
             try{
                 val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                audioManager.ringerMode = AudioManager.RINGER_MODE_NORMAL;
+                audioManager.ringerMode = AudioManager.RINGER_MODE_NORMAL
             }catch(e:SecurityException){
                 Log.i(TAG, e.toString())
             }

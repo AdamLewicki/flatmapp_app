@@ -72,7 +72,7 @@ class MainActivity: FlutterActivity() {
 
   private fun addGeofence(ID:String, latitude:Double, longitude:Double, radius:Float){
     val geofence: Geofence = geofenceHelper.getGeofence(ID, latitude, longitude, radius,
-            Geofence.GEOFENCE_TRANSITION_DWELL)// or Geofence.GEOFENCE_TRANSITION_EXIT)
+            Geofence.GEOFENCE_TRANSITION_DWELL or Geofence.GEOFENCE_TRANSITION_EXIT)
     val geofencingRequest: GeofencingRequest = geofenceHelper.getGeofencingRequest(geofence)
     val pendingIntent: PendingIntent = geofenceHelper.getPendingIntent()
     geofencingClient.addGeofences(geofencingRequest, pendingIntent)

@@ -36,18 +36,37 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
   Map<String, dynamic> _defaultFormData = {
     'sound': {
       'param1': '0',
+      'param2': 'false',
     },
     'change alarm volume': {
       'param1': '0',
+      'param2': 'false',
     },
     'change ringtone volume': {
       'param1': '0',
+      'param2': 'false',
     },
     'change multimedia volume': {
       'param1': '0',
+      'param2': 'false',
     },
-    'bluetooth': {'param1': 'true'},
-    'wi-fi': {'param1': 'true'},
+    'bluetooth': {
+      'param1': 'true',
+      'param2': 'false',
+    },
+    'wi-fi': {
+      'param1': 'true',
+      'param2': 'false',
+    },
+    'unmute': {
+      'param1': 'false',
+    },
+    'mute': {
+      'param1': 'false',
+    },
+    'single sound': {
+      'param1': 'false',
+    },
   };
 
   final focusParam1 = FocusNode();
@@ -84,6 +103,17 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
             });
           },
         ),
+            CheckboxListTile(
+              title: Text(LanguagesLoader.of(context)
+                  .translate("activation on exit")),
+              value: toBool(_formData['param2'], false),
+              onChanged: (newValue) {
+                setState(() {
+                  _formData['param2'] = newValue.toString();
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+            ),
       ]),
     );
   }
@@ -107,6 +137,17 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
             });
           },
         ),
+            CheckboxListTile(
+              title: Text(LanguagesLoader.of(context)
+                  .translate("activation on exit")),
+              value: toBool(_formData['param2'], false),
+              onChanged: (newValue) {
+                setState(() {
+                  _formData['param2'] = newValue.toString();
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+            ),
       ]),
     );
   }
@@ -130,6 +171,17 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
             });
           },
         ),
+            CheckboxListTile(
+              title: Text(LanguagesLoader.of(context)
+                  .translate("activation on exit")),
+              value: toBool(_formData['param2'], false),
+              onChanged: (newValue) {
+                setState(() {
+                  _formData['param2'] = newValue.toString();
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+            ),
       ]),
     );
   }
@@ -165,6 +217,17 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
             });
           },
         ),
+            CheckboxListTile(
+              title: Text(LanguagesLoader.of(context)
+                  .translate("activation on exit")),
+              value: toBool(_formData['param2'], false),
+              onChanged: (newValue) {
+                setState(() {
+                  _formData['param2'] = newValue.toString();
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+            ),
       ]),
     );
   }
@@ -200,6 +263,17 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
             });
           },
         ),
+            CheckboxListTile(
+              title: Text(LanguagesLoader.of(context)
+                  .translate("activation on exit")),
+              value: toBool(_formData['param2'], false),
+              onChanged: (newValue) {
+                setState(() {
+                  _formData['param2'] = newValue.toString();
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+            ),
 //
 //            TextFormField(
 //              style: bodyText(),
@@ -276,20 +350,42 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
           },
           focusNode: focusParam2,
         ),
+            CheckboxListTile(
+              title: Text(LanguagesLoader.of(context)
+                  .translate("activation on exit")),
+              value: toBool(_formData['param3'], false),
+              onChanged: (newValue) {
+                setState(() {
+                  _formData['param3'] = newValue.toString();
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+            ),
       ]),
     );
   }
 
   Widget _noWidget(BuildContext context, String actionname) {
-    return ListTile(
-      title: Text(
-          LanguagesLoader.of(context).translate(actionname) +
-              " " +
-              LanguagesLoader.of(context)
-                  .translate("[action] has no parameters"),
-          style: bodyText()),
-      trailing: Icon(Icons.not_interested),
+    return CheckboxListTile(
+      title: Text(LanguagesLoader.of(context)
+          .translate("activation on exit")),
+      value: toBool(_formData['param1'], false),
+      onChanged: (newValue) {
+        setState(() {
+          _formData['param1'] = newValue.toString();
+        });
+      },
+      controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
     );
+//      ListTile(
+//      title: Text(
+//          LanguagesLoader.of(context).translate(actionname) +
+//              " " +
+//              LanguagesLoader.of(context)
+//                  .translate("[action] has no parameters"),
+//          style: bodyText()),
+//      trailing: Icon(Icons.not_interested),
+//    );
   }
 
   // ---------------------------------------------------------------------------
