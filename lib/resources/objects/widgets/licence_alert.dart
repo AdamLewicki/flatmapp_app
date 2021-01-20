@@ -2,8 +2,11 @@ import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.da
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dnd/flutter_dnd.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:preferences/preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // show licence dialog at startup
 showLicenceAgreement(BuildContext context) async {
@@ -15,7 +18,25 @@ showLicenceAgreement(BuildContext context) async {
         // return object of type Dialog
         return AlertDialog(
           title: Text(LanguagesLoader.of(context).translate("Licence header")),
-          content: Text(LanguagesLoader.of(context).translate("Licence text")),
+          content: Linkify(
+            text:
+            "${LanguagesLoader.of(context).translate("Licence text")}",
+            onOpen: (link) async {
+              if (await canLaunch(link.url)) {
+                await launch(link.url);
+              } else {
+                // show message
+                Fluttertoast.showToast(
+                  msg:
+                  '${LanguagesLoader.of(context).translate("Could not launch")} $link',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                );
+              }
+            },
+//            style: bodyText(),
+            linkStyle: TextStyle(color: Colors.green),
+          ),//Text(LanguagesLoader.of(context).translate("Licence text")),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(

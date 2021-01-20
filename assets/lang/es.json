@@ -14,8 +14,8 @@
   "no actions added": "no se agregaron acciones",
   "Add action": "Agregar acción",
   "Edit parameters": "Editar parámetros",
-  "about_section_1": "'FlatMapp es un proyecto de ingeniería, que tiene como objetivo la creación de un administrador de geolocalización, desencadenando acciones definidas por el usuario en la posición geográfica declarada.",
-  "about_section_2": "'FlatMapp es de uso gratuito y no recopila ningún dato personal sin el consentimiento del usuario.",
+  "about_section_1": "FlatMapp es un proyecto de ingeniería, que tiene como objetivo la creación de un administrador de geolocalización, desencadenando acciones definidas por el usuario en la posición geográfica declarada.",
+  "about_section_2": "FlatMapp es de uso gratuito y no recopila ningún dato personal sin el consentimiento del usuario.",
   "flatmapp_footer": "FlatMapp Team @ 2020",
   "Turn wi-fi on": "Enciende wifi",
   "Turn wi-fi off": "Apagar wifi",
@@ -146,11 +146,13 @@
   "new line of text": "temptemptemptemp",
 
   "Licence header": "Acuerdo de licencia",
-  "Licence text": "Al aceptar este acuerdo, le permite a FlatMapp: \n1. Recopilar datos de ubicación para habilitar la activación de etiquetas configuradas para enviar notificaciones, \n2. Administrar el volumen de wi-fi, bluetooth y / o teléfono incluso cuando la aplicación está cerrado o no se utiliza. \nLa aplicación no se puede utilizar sin la previa aceptación de este acuerdo. ",
+  "Licence text": "Al aceptar este acuerdo, permite que FlatMapp:\n1. recopilar datos de ubicación para permitir la activación de etiquetas establecidas para enviar notificaciones,\n2. administrar el volumen de wi-fi, bluetooth y / o teléfono incluso cuando la aplicación está cerrada o no se usa.\n3. Enlace a la política de privacidad:\nhttps://flatmapp.flycricket.io/privacy.html\nLa aplicación no se puede utilizar sin la previa aceptación de este acuerdo.",
   "Licence accept": "Aceptar licencia",
   "Licence dismiss": "Cerrar aplicación",
   "Let's start": "Empecemos",
   "pop up title": "Tutorial!",
   "pop up content": "El tutorial está en desarrollo. Puedes comprobarlo en nuestra página de facebook:\n para ser agregado",
-  "activation on exit": "Activación a la salida"
+  "activation on exit": "Activación a la salida",
+  "Privacy policy": "Política de privacidad: ",
+  "Privacy policy link": "https://flatmapp.flycricket.io/privacy.html"
 }

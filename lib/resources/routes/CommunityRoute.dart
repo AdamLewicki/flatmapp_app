@@ -374,6 +374,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
           });
           netLoader.showToast(LanguagesLoader.of(context)
               .translate("All placemarks added successfully"));
+          Navigator.pushNamed(context, '/map');
         },
       ),
     );

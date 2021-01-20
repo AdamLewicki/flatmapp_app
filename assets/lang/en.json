@@ -15,8 +15,8 @@
   "Add action": "Add action",
   "Edit parameters": "Edit parameters",
 
-  "about_section_1": "'FlatMapp is an engineering project, aiming at creation of geolocation manager, triggering user-defined actions in declared geographical position.",
-  "about_section_2": "'FlatMapp is free to use and is not gathering any personal data without user consent.",
+  "about_section_1": "FlatMapp is an engineering project, aiming at creation of geolocation manager, triggering user-defined actions in declared geographical position.",
+  "about_section_2": "FlatMapp is free to use and is not gathering any personal data without user consent.",
   "Application repository" : "Application repository",
   "Could not launch": "Could not launch",
   "Server repository": "Server repository",
@@ -147,11 +147,13 @@
   "new line of text": "chwilowechwilowechwilowe",
 
   "Licence header": "Licence agreement",
-  "Licence text": "By accepting this agreement, you allow FlatMapp to: \n1. collect location data to enable activation of set tags to send notifications,\n2. manage wi-fi, bluetooth and/or phone volume even when the application is closed or not used.\nApp can not be used without previous acceptance of this agreement.",
+  "Licence text": "By accepting this agreement, you allow FlatMapp to: \n1. collect location data to enable activation of set tags to send notifications,\n2. manage wi-fi, bluetooth and/or phone volume even when the application is closed or not used.\n3. Link to privacy policy:\nhttps://flatmapp.flycricket.io/privacy.html\nApp can not be used without previous acceptance of this agreement.",
   "Licence accept": "Accept licence",
   "Licence dismiss": "Close app",
   "Let's start": "Let's start",
   "pop up title": "Tutorial!",
   "pop up content": "Tutorial is under development. You can check it out on our facebook page:\n to be added",
-  "activation on exit": "Activation on exit"
+  "activation on exit": "Activation on exit",
+  "Privacy policy": "Privacy policy: ",
+  "Privacy policy link": "https://flatmapp.flycricket.io/privacy.html"
 }
