@@ -5,8 +5,8 @@
   "Community": "Comunidad",
   "Settings": "Configuraciones",
   "About": "Acerca de",
-  "Log In": "Log In",
-  "Log out": "Log Out",
+  "Log In": "Iniciar sesión",
+  "Log out": "Cerrar sesión",
   "Remove action?": "¿Eliminar acción?",
   "You are about to remove action": "Estás a punto de eliminar la acción",
   "No": "No, gracias",
@@ -53,7 +53,7 @@
   "Username": "Nombre de usuario",
   "Back up your markers to server": "Haga una copia de seguridad de sus marcadores en el servidor",
   "Get your markers from Backup": "Cambiar los datos del usuario",
-  "Change user data": "Change user data",
+  "Change user data": "Cambiar los datos del usuario",
   "Erase account from system": "Borrar cuenta del sistema",
   "Register": "Registrarse",
 
@@ -142,9 +142,6 @@
   "wi-fi": "Wifi",
   "single sound": "sonido único",
 
-  "---------------": "Se deben agregar nuevas líneas después de esta línea para agregarlas a otros diccionarios.",
-  "new line of text": "temptemptemptemp",
-
   "Licence header": "Acuerdo de licencia",
   "Licence text": "Al aceptar este acuerdo, permite que FlatMapp:\n1. recopilar datos de ubicación para permitir la activación de etiquetas establecidas para enviar notificaciones,\n2. administrar el volumen de wi-fi, bluetooth y / o teléfono incluso cuando la aplicación está cerrada o no se usa.\n3. Enlace a la política de privacidad:\nhttps://flatmapp.flycricket.io/privacy.html\nLa aplicación no se puede utilizar sin la previa aceptación de este acuerdo.",
   "Licence accept": "Aceptar licencia",
@@ -154,5 +151,9 @@
   "pop up content": "El tutorial está en desarrollo. Puedes comprobarlo en nuestra página de facebook:\n para ser agregado",
   "activation on exit": "Activación a la salida",
   "Privacy policy": "Política de privacidad: ",
-  "Privacy policy link": "https://flatmapp.flycricket.io/privacy.html"
+  "Privacy policy link": "https://flatmapp.flycricket.io/privacy.html",
+
+  "---------------": "Se deben agregar nuevas líneas después de esta línea para agregarlas a otros diccionarios.",
+  "new line of text": "temptemptemptemp"
+
 }
