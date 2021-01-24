@@ -42,7 +42,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
   final _formKey2 = GlobalKey<FormState>();
 
   bool if_already_added = false;
-  String _last_search = "text"; // something not empty
+  String _last_search = "text"; // ignore: unused_field, // something not empty
 
   Map<String, dynamic> _formCategoryData = {
     'category': '',
