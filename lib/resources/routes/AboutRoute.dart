@@ -71,6 +71,29 @@ class AboutRoute extends StatelessWidget {
               ListTile(
                 title: Linkify(
                   text:
+                  "${LanguagesLoader.of(context).translate("facebook")} \nhttps://www.facebook.com/Flatmapp-101026448658598",
+                  onOpen: (link) async {
+                    if (await canLaunch(link.url)) {
+                      await launch(link.url);
+                    } else {
+                      // show message
+                      Fluttertoast.showToast(
+                        msg:
+                        '${LanguagesLoader.of(context).translate("Could not launch")} $link',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                      );
+                    }
+                  },
+                  style: bodyText(),
+                  linkStyle: TextStyle(color: Colors.green),
+                ),
+                trailing: Icon(Icons.link),
+              ),
+              SizedBox(height: 10),
+              ListTile(
+                title: Linkify(
+                  text:
                       "${LanguagesLoader.of(context).translate("Application repository")} \nhttps://github.com/AdamLewicki/flatmapp_app",
                   onOpen: (link) async {
                     if (await canLaunch(link.url)) {

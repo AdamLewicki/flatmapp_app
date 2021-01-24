@@ -53,7 +53,25 @@ showLicenceAgreement(BuildContext context) async {
                   builder: (BuildContext context) {
                     return AlertDialog(
                         title: Text(LanguagesLoader.of(context).translate("pop up title")),
-                        content: Text(LanguagesLoader.of(context).translate("pop up content")),
+                        content: Linkify(
+                          text:
+                          "${LanguagesLoader.of(context).translate("pop up content")}",
+                          onOpen: (link) async {
+                            if (await canLaunch(link.url)) {
+                              await launch(link.url);
+                            } else {
+                              // show message
+                              Fluttertoast.showToast(
+                                msg:
+                                '${LanguagesLoader.of(context).translate("Could not launch")} $link',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                              );
+                            }
+                          },
+//            style: bodyText(),
+                          linkStyle: TextStyle(color: Colors.green),
+                        ),
                         actions: <Widget>[
                                     new FlatButton(
                                       child: new Text(LanguagesLoader.of(context).translate("Let's start")),

@@ -148,10 +148,11 @@
   "Licence dismiss": "Cerrar aplicación",
   "Let's start": "Empecemos",
   "pop up title": "Tutorial!",
-  "pop up content": "El tutorial está en desarrollo. Puedes comprobarlo en nuestra página de facebook:\n para ser agregado",
+  "pop up content": "El tutorial está en desarrollo. Puedes comprobarlo en nuestra página de facebook:\n https://www.facebook.com/Flatmapp-101026448658598",
   "activation on exit": "Activación a la salida",
   "Privacy policy": "Política de privacidad: ",
   "Privacy policy link": "https://flatmapp.flycricket.io/privacy.html",
+  "facebook": "Nuestro Facebook:",
 
   "---------------": "Se deben agregar nuevas líneas después de esta línea para agregarlas a otros diccionarios.",
   "new line of text": "temptemptemptemp"

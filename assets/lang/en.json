@@ -149,10 +149,11 @@
   "Licence dismiss": "Close app",
   "Let's start": "Let's start",
   "pop up title": "Tutorial!",
-  "pop up content": "Tutorial is under development. You can check it out on our facebook page:\n to be added",
+  "pop up content": "Tutorial is under development. You can check it out on our facebook page:\n https://www.facebook.com/Flatmapp-101026448658598",
   "activation on exit": "Activation on exit",
   "Privacy policy": "Privacy policy: ",
   "Privacy policy link": "https://flatmapp.flycricket.io/privacy.html",
+  "facebook": "Our Facebook:",
 
   "---------------": "new lines should be added after this line in order to add them to other dictionaries",
   "new line of text": "chwilowechwilowechwilowe"
