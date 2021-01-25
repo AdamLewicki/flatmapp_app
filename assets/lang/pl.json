@@ -142,7 +142,7 @@
   "single sound": "pojedyńczy dźwięk",
 
   "Licence header": "Umowa licencyjna",
-  "Licence text": "Akceptując tą umowę zgadzasz się, aby FlatMapp:\n1. zbierał dane o lokalizacji, aby umożliwić aktywację ustawionych tagów do wysyłania powiadomień,\n2. zarządzania wi-fi, bluetooth'em oraz głośnością telefonu nawet gdy aplikacja jest zamknięta lub w tle.\n3. Link do polityki prywatności:\nhttps://prod.guideme24.pl/privacy-policy/3291\nBez akceptacji tych warunków nie można kożystać z aplikacji.",
+  "Licence text": "Akceptując tą umowę zgadzasz się, aby FlatMapp:\nzbierał dane o lokalizacji, aby umożliwić aktywację ustawionych tagów do wysyłania powiadomień,\nzarządzania wi-fi, bluetooth'em oraz głośnością telefonu nawet gdy aplikacja jest zamknięta lub w tle.\n\nLink do polityki prywatności:\nhttps://prod.guideme24.pl/privacy-policy/3291\nBez akceptacji tych warunków nie można kożystać z aplikacji.",
   "Licence accept": "Zaakceptuj",
   "Licence dismiss": "Zamknij",
   "Let's start": "Zacznijmy",

@@ -143,7 +143,7 @@
   "single sound": "sonido único",
 
   "Licence header": "Acuerdo de licencia",
-  "Licence text": "Al aceptar este acuerdo, permite que FlatMapp:\n1. recopilar datos de ubicación para permitir la activación de etiquetas establecidas para enviar notificaciones,\n2. administrar el volumen de wi-fi, bluetooth y / o teléfono incluso cuando la aplicación está cerrada o no se usa.\n3. Enlace a la política de privacidad:\nhttps://flatmapp.flycricket.io/privacy.html\nLa aplicación no se puede utilizar sin la previa aceptación de este acuerdo.",
+  "Licence text": "Al aceptar este acuerdo, permite que FlatMapp:\nrecopilar datos de ubicación para permitir la activación de etiquetas establecidas para enviar notificaciones,\nadministrar el volumen de wi-fi, bluetooth y / o teléfono incluso cuando la aplicación está cerrada o no se usa.\n\nEnlace a la política de privacidad:\nhttps://flatmapp.flycricket.io/privacy.html\nLa aplicación no se puede utilizar sin la previa aceptación de este acuerdo.",
   "Licence accept": "Aceptar licencia",
   "Licence dismiss": "Cerrar aplicación",
   "Let's start": "Empecemos",
