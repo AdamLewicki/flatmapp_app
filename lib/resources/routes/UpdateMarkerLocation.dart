@@ -72,7 +72,7 @@ class _UpdateMarkerLocationState extends State< UpdateMarkerLocation > {
                     Navigator.pop(context);
                   },
                   color: Colors.white,
-                  textColor: Colors.green,
+                  textColor: Colors.black,
                   child: Text(LanguagesLoader.of(context).translate("Update Position").toUpperCase(),
                       style: TextStyle(fontSize: 14)),
                 ),
