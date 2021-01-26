@@ -560,7 +560,7 @@ widget._markerLoader.updateStateMethod((){
                         title: Text(
                             LanguagesLoader.of(context)
                                 .translate("Delete marker"),
-                            style: bodyText()),
+                            style: formButtonText()),
 //                        trailing: Icon(Icons.delete_forever),
                         onTap: () {
                           // set up the AlertDialog
@@ -578,7 +578,7 @@ widget._markerLoader.updateStateMethod((){
                         title: Text(
                             LanguagesLoader.of(context)
                                 .translate("Marker Position"),
-                            style: bodyText()),
+                            style: formButtonText()),
 //                        trailing: Icon(Icons.delete_forever),
                         onTap: () {
                           String _selectedMarkerId = PrefService.get('selected_marker');
@@ -614,7 +614,7 @@ widget._markerLoader.updateStateMethod((){
                             : Text(
                             LanguagesLoader.of(context)
                                 .translate("Save marker"),
-                            style: bodyText()),
+                            style: formButtonText()),
 //                        leading: Icon(Icons.bookmark_border),
                         onTap: () {
                           // submit form and add marker to dictionary

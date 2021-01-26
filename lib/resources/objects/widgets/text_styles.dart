@@ -17,6 +17,16 @@ TextStyle bodyText({Color color}) {
   }
 }
 
+TextStyle formButtonText({Color color}) {
+  if (color != null) {
+    return TextStyle(fontSize: 14, color: color);
+  } else {
+    return TextStyle(
+      fontSize: 14,
+    );
+  }
+}
+
 TextStyle addMarkerText({Color color}) {
   if (color != null) {
     return TextStyle(fontSize: 16, color: color);
