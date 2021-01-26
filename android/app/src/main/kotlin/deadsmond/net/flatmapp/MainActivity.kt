@@ -35,14 +35,6 @@ class MainActivity: FlutterActivity() {
   override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)
     // TODO
-    val notificationManager:NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-            && !notificationManager.isNotificationPolicyAccessGranted) {
-      val intent = Intent(
-              Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
-      startActivity(intent)
-    }
     geofencingClient = LocationServices.getGeofencingClient(this)
     geofenceHelper = GeofenceHelper(this)
     MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
@@ -80,7 +72,7 @@ class MainActivity: FlutterActivity() {
 
   private fun addGeofence(ID:String, latitude:Double, longitude:Double, radius:Float){
     val geofence: Geofence = geofenceHelper.getGeofence(ID, latitude, longitude, radius,
-            Geofence.GEOFENCE_TRANSITION_DWELL)// or Geofence.GEOFENCE_TRANSITION_EXIT)
+            Geofence.GEOFENCE_TRANSITION_DWELL or Geofence.GEOFENCE_TRANSITION_EXIT)
     val geofencingRequest: GeofencingRequest = geofenceHelper.getGeofencingRequest(geofence)
     val pendingIntent: PendingIntent = geofenceHelper.getPendingIntent()
     geofencingClient.addGeofences(geofencingRequest, pendingIntent)

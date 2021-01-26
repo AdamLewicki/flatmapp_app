@@ -102,17 +102,17 @@ class _MapRouteState extends State<MapRoute> {
   void initState() {
     super.initState();
 
-    print("ok initstate");
     // update form
     updateFormData();
 
     // update camera position
     updateCameraPosition();
+
     Future.delayed(Duration.zero, () => showLicenceAgreement(context));
     widget._markerLoader.mySlowMethod(() {
 
       setState(() {});
-      print("ok long press");
+      //print("ok long press");
       // update form
       updateFormData();
       // open sliding form
@@ -185,15 +185,12 @@ widget._markerLoader.updateStateMethod((){
       setState(() {
         // change temporary position
         widget._markerLoader.addTemporaryMarker(position);
+
         // change selected marker in prefs
         PrefService.setString('selected_marker', 'temporary');
 
         // save markers state to file
         widget._markerLoader.saveMarkers();
-        // Marker temp = widget._markerLoader.getGoogleMarker(id: PrefService.getString('selected_marker'));
-        // print("gf");
-        // print(temp);
-
       });
     }
   }
@@ -205,7 +202,7 @@ widget._markerLoader.updateStateMethod((){
       return;
     }
     setState(() {});
-    print("ok long press");
+
     // update form
     updateFormData();
     // open sliding form
@@ -235,48 +232,6 @@ widget._markerLoader.updateStateMethod((){
   }
 
   Widget _googleMapWidget() {
-    // final IconsLoader iconsLoader = IconsLoader();
-
-    // final List<MapMarker> markers = [];
-
-    // final List<LatLng> markerLocations = [
-    //   LatLng(41.147125, -8.611249),
-    //   LatLng(41.145599, -8.610691),
-    // ];
-
-    //
-    // iconsLoader.getMarkerImage("default").then((iconBitmap) {
-    //   setState(() {
-    //     fluster = Fluster<MapMarker>(
-    //       minZoom: _minClusterZoom, // The min zoom at clusters will show
-    //       maxZoom: _maxClusterZoom, // The max zoom at clusters will show
-    //       radius: 150, // Cluster radius in pixels
-    //       extent: 2048, // Tile extent. Radius is calculated with it.
-    //       nodeSize: 64, // Size of the KD-tree leaf node.
-    //       points: markers, // The list of markers created before
-    //       createCluster: ( // Create cluster marker
-    //           BaseCluster cluster,
-    //           double lng,
-    //           double lat,
-    //           ) => MapMarker(
-    //         id: cluster.id.toString(),
-    //         position: LatLng(lat, lng),
-    //         icon:iconBitmap,
-    //         isCluster: cluster.isCluster,
-    //         clusterId: cluster.id,
-    //         pointsSize: cluster.pointsSize,
-    //         childMarkerId: cluster.childMarkerId,
-    //       ),
-    //     );
-    //   });
-    //
-    // });
-
-      // final List<Marker> googleMarkers = fluster !=null ?
-      //   fluster.clusters([-180, -85, 180, 85], 16)
-      //   .map((cluster) => cluster.toMarker())
-      //   .toList(): widget._markerLoader.googleMarkers.values.toList();
-
     return GoogleMap(
       myLocationEnabled: true,
       mapToolbarEnabled: true,
@@ -288,14 +243,10 @@ widget._markerLoader.updateStateMethod((){
       onCameraMove: (position) => _updateMarkers(position.zoom),
       // call this function when tapped on the map
       onTap: (position) {
-        print("ok");
-        print(position);
         _mapTap(position);
       },
       // call this function when long pressed on the map
       onLongPress: (position) {
-        print("ok");
-        print(position);
         _mapLongPress(position);
       },
     );
@@ -355,13 +306,10 @@ widget._markerLoader.updateStateMethod((){
       _formMarkerData['range'] = temp.range.toInt();
     }
 
-    print("ok updateFormData");
     // update controllers
     _formTitleController.text = _formMarkerData['title'].toString();
     _formDescriptionController.text = _formMarkerData['description'].toString();
     _formRangeController.text = _formMarkerData['range'].toString();
-
-
   }
 
   Widget _iconChangeButton() {
@@ -551,8 +499,6 @@ widget._markerLoader.updateStateMethod((){
         // reset data form
         PrefService.setString('selected_marker', 'temporary');
         PrefService.setString('selected_icon', 'default');
-
-        print("ok save marker");
         updateFormData();
 
         // show message
@@ -921,5 +867,4 @@ widget._markerLoader.updateStateMethod((){
       _areMarkersLoading = false;
     });
   }
-
 }

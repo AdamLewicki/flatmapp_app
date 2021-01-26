@@ -8,8 +8,8 @@
   "Marker Position": "Posición del marcador",
 
   "About": "Acerca de",
-  "Log In": "Log In",
-  "Log out": "Log Out",
+  "Log In": "Iniciar sesión",
+  "Log out": "Cerrar sesión",
   "Remove action?": "¿Eliminar acción?",
   "You are about to remove action": "Estás a punto de eliminar la acción",
   "No": "No, gracias",
@@ -17,8 +17,8 @@
   "no actions added": "no se agregaron acciones",
   "Add action": "Agregar acción",
   "Edit parameters": "Editar parámetros",
-  "about_section_1": "'FlatMapp es un proyecto de ingeniería, que tiene como objetivo la creación de un administrador de geolocalización, desencadenando acciones definidas por el usuario en la posición geográfica declarada.",
-  "about_section_2": "'FlatMapp es de uso gratuito y no recopila ningún dato personal sin el consentimiento del usuario.",
+  "about_section_1": "FlatMapp es un proyecto de ingeniería, que tiene como objetivo la creación de un administrador de geolocalización, desencadenando acciones definidas por el usuario en la posición geográfica declarada.",
+  "about_section_2": "FlatMapp es de uso gratuito y no recopila ningún dato personal sin el consentimiento del usuario.",
   "flatmapp_footer": "FlatMapp Team @ 2020",
   "Turn wi-fi on": "Enciende wifi",
   "Turn wi-fi off": "Apagar wifi",
@@ -56,7 +56,7 @@
   "Username": "Nombre de usuario",
   "Back up your markers to server": "Haga una copia de seguridad de sus marcadores en el servidor",
   "Get your markers from Backup": "Cambiar los datos del usuario",
-  "Change user data": "Change user data",
+  "Change user data": "Cambiar los datos del usuario",
   "Erase account from system": "Borrar cuenta del sistema",
   "Register": "Registrarse",
 
@@ -145,11 +145,19 @@
   "wi-fi": "Wifi",
   "single sound": "sonido único",
 
-  "---------------": "Se deben agregar nuevas líneas después de esta línea para agregarlas a otros diccionarios.",
-  "new line of text": "temptemptemptemp",
+  "Licence header": "Acuerdo de licencia",
+  "Licence text": "Al aceptar este acuerdo, permite que FlatMapp:\nrecopilar datos de ubicación para permitir la activación de etiquetas establecidas para enviar notificaciones,\nadministrar el volumen de wi-fi, bluetooth y / o teléfono incluso cuando la aplicación está cerrada o no se usa.\n\nEnlace a la política de privacidad:\nhttps://flatmapp.flycricket.io/privacy.html\nLa aplicación no se puede utilizar sin la previa aceptación de este acuerdo.",
+  "Licence accept": "Aceptar licencia",
+  "Licence dismiss": "Cerrar aplicación",
+  "Let's start": "Empecemos",
+  "pop up title": "Tutorial!",
+  "pop up content": "El tutorial está en desarrollo. Puedes comprobarlo en nuestra página de facebook:\n https://www.facebook.com/Flatmapp-101026448658598",
+  "activation on exit": "Activación a la salida",
+  "Privacy policy": "Política de privacidad: ",
+  "Privacy policy link": "https://flatmapp.flycricket.io/privacy.html",
+  "facebook": "Nuestro Facebook:",
 
-  "Licence header": "Licence agreement",
-  "Licence text": "By accepting this agreement, you allow FlatMapp to: \n1. collect location data to enable activation of set tags to send notifications,\n2. manage wi-fi, bluetooth and/or phone volume even when the application is closed or not used.\nApp can not be used without previous acceptance of this agreement.",
-  "Licence accept": "Accept licence",
-  "Licence dismiss": "Close app"
+  "---------------": "Se deben agregar nuevas líneas después de esta línea para agregarlas a otros diccionarios.",
+  "new line of text": "temptemptemptemp"
+
 }

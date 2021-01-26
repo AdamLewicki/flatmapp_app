@@ -14,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:preferences/preferences.dart';
 
 class NetLoader {
+  // ignore: deprecated_member_use
   String _serverURL = GlobalConfiguration().getString("server_url");
 
   Future<bool> checkNetworkConnection() async {

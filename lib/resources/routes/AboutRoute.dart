@@ -1,6 +1,5 @@
 import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
-import 'package:flatmapp/resources/objects/widgets/licence_alert.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,7 @@ class AboutRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // show licence agreement
-    Future.delayed(Duration.zero, () => showLicenceAgreement(context));
+//    Future.delayed(Duration.zero, () => showLicenceAgreement(context));
     return Scaffold(
       appBar: appBar(),
       body: Padding(
@@ -46,11 +45,56 @@ class AboutRoute extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10),
-
               ListTile(
                 title: Linkify(
                   text:
-                      "${LanguagesLoader.of(context).translate("Application repository")}: \nhttps://github.com/AdamLewicki/flatmapp_app",
+                  "${LanguagesLoader.of(context).translate("Privacy policy")}: \n${LanguagesLoader.of(context).translate("Privacy policy link")}",
+                  onOpen: (link) async {
+                    if (await canLaunch(link.url)) {
+                      await launch(link.url);
+                    } else {
+                      // show message
+                      Fluttertoast.showToast(
+                        msg:
+                        '${LanguagesLoader.of(context).translate("Could not launch")} $link',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                      );
+                    }
+                  },
+                  style: bodyText(),
+                  linkStyle: TextStyle(color: Colors.green),
+                ),
+                trailing: Icon(Icons.link),
+              ),
+              SizedBox(height: 10),
+              ListTile(
+                title: Linkify(
+                  text:
+                  "${LanguagesLoader.of(context).translate("facebook")} \nhttps://www.facebook.com/Flatmapp-101026448658598",
+                  onOpen: (link) async {
+                    if (await canLaunch(link.url)) {
+                      await launch(link.url);
+                    } else {
+                      // show message
+                      Fluttertoast.showToast(
+                        msg:
+                        '${LanguagesLoader.of(context).translate("Could not launch")} $link',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                      );
+                    }
+                  },
+                  style: bodyText(),
+                  linkStyle: TextStyle(color: Colors.green),
+                ),
+                trailing: Icon(Icons.link),
+              ),
+              SizedBox(height: 10),
+              ListTile(
+                title: Linkify(
+                  text:
+                      "${LanguagesLoader.of(context).translate("Application repository")} \nhttps://github.com/AdamLewicki/flatmapp_app",
                   onOpen: (link) async {
                     if (await canLaunch(link.url)) {
                       await launch(link.url);
