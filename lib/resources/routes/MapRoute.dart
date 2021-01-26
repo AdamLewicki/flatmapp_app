@@ -18,7 +18,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:preferences/preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:provider/provider.dart';
 
 import 'UpdateMarkerLocation.dart';
 
