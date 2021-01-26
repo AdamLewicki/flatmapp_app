@@ -19,10 +19,10 @@ TextStyle bodyText({Color color}) {
 
 TextStyle formButtonText({Color color}) {
   if (color != null) {
-    return TextStyle(fontSize: 14, color: color);
+    return TextStyle(fontSize: 12, color: color);
   } else {
     return TextStyle(
-      fontSize: 14,
+      fontSize: 12,
     );
   }
 }
