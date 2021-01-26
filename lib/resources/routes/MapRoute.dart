@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/map_helper.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
@@ -66,12 +65,12 @@ class _MapRouteState extends State<MapRoute> {
   Fluster<MapMarker> _clusterManager;
 
   /// Current map zoom. Initial zoom will be 15, street level
-  double _currentZoom = 15;
+  double _currentZoom = 17;
 
 
   /// Url image used on normal markers
-  final String _markerImageUrl =
-      'https://img.icons8.com/office/80/000000/marker.png';
+  // final String _markerImageUrl =
+  //     'https://img.icons8.com/office/80/000000/marker.png';
 
   /// Color of the cluster circle
   final Color _clusterColor = Colors.blue;
