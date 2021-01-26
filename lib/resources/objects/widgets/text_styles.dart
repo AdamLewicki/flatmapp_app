@@ -19,10 +19,10 @@ TextStyle bodyText({Color color}) {
 
 TextStyle formButtonText({Color color}) {
   if (color != null) {
-    return TextStyle(fontSize: 12, color: color);
+    return TextStyle(fontSize: 14, color: color);
   } else {
     return TextStyle(
-      fontSize: 12,
+      fontSize: 14,
     );
   }
 }
@@ -95,7 +95,7 @@ InputDecoration textFieldStyle({
 
 BoxDecoration buttonFieldStyle() {
   return BoxDecoration(
-    border: Border.all(width: 0.5),
+    border: Border.all(width: 1, color: Colors.grey ),
     borderRadius: BorderRadius.circular(10),
   );
 }
