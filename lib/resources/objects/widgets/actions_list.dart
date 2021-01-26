@@ -56,6 +56,7 @@ class ActionsList {
   }
 
   void addAction(context, index) {
+
     // set selected marker id for map screen
     PrefService.setInt('selected_action', index);
     // Navigate to the icons screen using a named route.
@@ -63,6 +64,9 @@ class ActionsList {
   }
 
   Widget buildActionsList(BuildContext context, String id) {
+
+
+
     // actions list
     // https://stackoverflow.com/questions/53908025/flutter-sortable-drag-and-drop-listview
     // https://api.flutter.dev/flutter/material/ReorderableListView-class.html

@@ -6,6 +6,7 @@ import 'package:flatmapp/resources/objects/loaders/geofence_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
+import 'package:flatmapp/resources/routes/MapRoute.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -21,6 +22,8 @@ class MarkerLoader {
 
   // google maps markers set
   Map<String, Marker> googleMarkers = <String, Marker>{};
+   VoidCallback called;
+   VoidCallback updatestate;
 
   // zones set
   Map<String, Circle> zones = <String, Circle>{};
@@ -153,6 +156,19 @@ class MarkerLoader {
     return UniqueKey().toString();
   }
 
+  mySlowMethod(VoidCallback listener) async {
+    // Here your uncertain task
+    // In our case, for example, we call the listener every 2 seconds
+    called = listener;
+
+  }
+
+  updateStateMethod(VoidCallback listener) async {
+    // Here your uncertain task
+    // In our case, for example, we call the listener every 2 seconds
+    updatestate = listener;
+
+  }
   // add or edit marker
   void addMarker(
       {String id,
@@ -174,12 +190,24 @@ class MarkerLoader {
             // set marker as selected on tap
             PrefService.setString('selected_marker', id);
             PrefService.setString('selected_icon', icon);
+            print("ok on marker tap");
+            if(called!=null)
+              called(); //We can pass more then 1 parameter
+
           },
+          draggable: true,
+          onDragEnd: ((newPosition) {
+            print("drag");
+            print(newPosition.latitude);
+            print(newPosition.longitude);
+            if(updatestate=null){
+              updatestate();
+            }
+          }),
           infoWindow: InfoWindow(
             title: title,
             snippet: description,
           ));
-
       // add zone
       zones[id] = Circle(
         circleId: CircleId(id),
@@ -190,7 +218,6 @@ class MarkerLoader {
         strokeColor: Colors.redAccent,
       );
     });
-
     // save markers
     saveMarkers();
 
@@ -276,6 +303,11 @@ class MarkerLoader {
         (_markersDescriptions[id].actions.length + 1).toDouble();
 
     _markersDescriptions[id].actions.add(action);
+    if(updatestate!=null)
+      updatestate(); //We can pass more then 1 parameter
+
+
+
     saveMarkers();
   }
 

@@ -36,18 +36,37 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
   Map<String, dynamic> _defaultFormData = {
     'sound': {
       'param1': '0',
+      'param2': 'false',
     },
     'change alarm volume': {
       'param1': '0',
+      'param2': 'false',
     },
     'change ringtone volume': {
       'param1': '0',
+      'param2': 'false',
     },
     'change multimedia volume': {
       'param1': '0',
+      'param2': 'false',
     },
-    'bluetooth': {'param1': 'true'},
-    'wi-fi': {'param1': 'true'},
+    'bluetooth': {
+      'param1': 'true',
+      'param2': 'false',
+    },
+    'wi-fi': {
+      'param1': 'true',
+      'param2': 'false',
+    },
+    'unmute': {
+      'param1': 'false',
+    },
+    'mute': {
+      'param1': 'false',
+    },
+    'single sound': {
+      'param1': 'false',
+    },
   };
 
   final focusParam1 = FocusNode();
@@ -69,7 +88,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
     return Form(
       key: _formKey,
       child:
-          Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+      Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
         Slider(
           value: toDouble(_formData['param1'], 0),
           activeColor: Colors.green,
@@ -83,6 +102,17 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
               _formData['param1'] = value.round().toString();
             });
           },
+        ),
+        CheckboxListTile(
+          title: Text(LanguagesLoader.of(context)
+              .translate("activation on exit")),
+          value: toBool(_formData['param2'], false),
+          onChanged: (newValue) {
+            setState(() {
+              _formData['param2'] = newValue.toString();
+            });
+          },
+          controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
         ),
       ]),
     );
@@ -92,7 +122,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
     return Form(
       key: _formKey,
       child:
-          Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+      Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
         Slider(
           value: toDouble(_formData['param1'], 0),
           activeColor: Colors.green,
@@ -106,6 +136,17 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
               _formData['param1'] = value.round().toString();
             });
           },
+        ),
+        CheckboxListTile(
+          title: Text(LanguagesLoader.of(context)
+              .translate("activation on exit")),
+          value: toBool(_formData['param2'], false),
+          onChanged: (newValue) {
+            setState(() {
+              _formData['param2'] = newValue.toString();
+            });
+          },
+          controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
         ),
       ]),
     );
@@ -115,7 +156,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
     return Form(
       key: _formKey,
       child:
-          Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+      Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
         Slider(
           value: toDouble(_formData['param1'], 0),
           activeColor: Colors.green,
@@ -130,6 +171,17 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
             });
           },
         ),
+        CheckboxListTile(
+          title: Text(LanguagesLoader.of(context)
+              .translate("activation on exit")),
+          value: toBool(_formData['param2'], false),
+          onChanged: (newValue) {
+            setState(() {
+              _formData['param2'] = newValue.toString();
+            });
+          },
+          controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+        ),
       ]),
     );
   }
@@ -138,7 +190,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
     return Form(
       key: _formKey,
       child:
-          Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+      Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
         RadioListTile(
           title: Text(
             LanguagesLoader.of(context).translate("Turn wi-fi on"),
@@ -165,6 +217,17 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
             });
           },
         ),
+        CheckboxListTile(
+          title: Text(LanguagesLoader.of(context)
+              .translate("activation on exit")),
+          value: toBool(_formData['param2'], false),
+          onChanged: (newValue) {
+            setState(() {
+              _formData['param2'] = newValue.toString();
+            });
+          },
+          controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+        ),
       ]),
     );
   }
@@ -173,7 +236,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
     return Form(
       key: _formKey,
       child:
-          Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+      Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
         RadioListTile(
           title: Text(
             LanguagesLoader.of(context).translate("Turn bluetooth on"),
@@ -199,6 +262,17 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
               _formData['param1'] = value.toString();
             });
           },
+        ),
+        CheckboxListTile(
+          title: Text(LanguagesLoader.of(context)
+              .translate("activation on exit")),
+          value: toBool(_formData['param2'], false),
+          onChanged: (newValue) {
+            setState(() {
+              _formData['param2'] = newValue.toString();
+            });
+          },
+          controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
         ),
 //
 //            TextFormField(
@@ -242,12 +316,12 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
     return Form(
       key: _formKey,
       child:
-          Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+      Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
         TextFormField(
           style: bodyText(),
           decoration: textFieldStyle(
               labelTextStr:
-                  LanguagesLoader.of(context).translate("Notification title")),
+              LanguagesLoader.of(context).translate("Notification title")),
           initialValue: _formData['param1'].toString(),
           onSaved: (String value) {
             _formData['param1'] = value;
@@ -276,20 +350,42 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
           },
           focusNode: focusParam2,
         ),
+        CheckboxListTile(
+          title: Text(LanguagesLoader.of(context)
+              .translate("activation on exit")),
+          value: toBool(_formData['param3'], false),
+          onChanged: (newValue) {
+            setState(() {
+              _formData['param3'] = newValue.toString();
+            });
+          },
+          controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+        ),
       ]),
     );
   }
 
   Widget _noWidget(BuildContext context, String actionname) {
-    return ListTile(
-      title: Text(
-          LanguagesLoader.of(context).translate(actionname) +
-              " " +
-              LanguagesLoader.of(context)
-                  .translate("[action] has no parameters"),
-          style: bodyText()),
-      trailing: Icon(Icons.not_interested),
+    return CheckboxListTile(
+      title: Text(LanguagesLoader.of(context)
+          .translate("activation on exit")),
+      value: toBool(_formData['param1'], false),
+      onChanged: (newValue) {
+        setState(() {
+          _formData['param1'] = newValue.toString();
+        });
+      },
+      controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
     );
+//      ListTile(
+//      title: Text(
+//          LanguagesLoader.of(context).translate(actionname) +
+//              " " +
+//              LanguagesLoader.of(context)
+//                  .translate("[action] has no parameters"),
+//          style: bodyText()),
+//      trailing: Icon(Icons.not_interested),
+//    );
   }
 
   // ---------------------------------------------------------------------------
@@ -332,7 +428,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
         return ListTile(
             title: Text(
               LanguagesLoader.of(context)
-                      .translate("Could not find widget for: ") +
+                  .translate("Could not find widget for: ") +
                   '$selected_widget!',
               style: bodyText(),
             ),
@@ -350,7 +446,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
           leading: CircleAvatar(
             backgroundColor: Colors.white,
             backgroundImage:
-                AssetImage(_actionsLoader.actionsMap[_selected_action.icon]),
+            AssetImage(_actionsLoader.actionsMap[_selected_action.icon]),
           ),
         ),
         _actionSelectorWidget(context, _selected_action.name),
@@ -388,8 +484,8 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
           title: LanguagesLoader.of(context).translate("Action parameters")),
 //      appBar: appBar(title: 'Action parameters'),
       body:
-          // BODY
-          Padding(
+      // BODY
+      Padding(
         padding: const EdgeInsets.only(left: 15.0, right: 15.0),
         child: _parametersColumn(context),
       ),
@@ -415,7 +511,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
             setState(() {
               switch (index) {
                 case 0:
-                  // save changes from form
+                // save changes from form
                   _submitForm();
                   // return to previous screen
                   Navigator.of(context).pop();

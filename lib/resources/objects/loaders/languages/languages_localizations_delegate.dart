@@ -15,6 +15,7 @@ class LanguagesLocalizationsDelegate
 
   @override
   Future<LanguagesLoader> load(Locale locale) async {
+
     LanguagesLoader localizations = new LanguagesLoader(locale);
     await localizations.load();
 
