@@ -605,7 +605,11 @@ class _CommunityRouteState extends State<CommunityRoute> {
       topRight: Radius.circular(24.0),
     );
 
-    return Scaffold(
+    return GestureDetector(
+        onTap: (){
+      FocusScope.of(context).requestFocus(new FocusNode());
+    },
+    child: Scaffold(
       appBar: appBar(),
       body:
           // BODY
@@ -712,6 +716,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
+    ),
     );
   }
 }

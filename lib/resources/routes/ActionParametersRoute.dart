@@ -479,7 +479,11 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
 
     _formData = _selected_action.parameters;
 
-    return Scaffold(
+    return GestureDetector(
+        onTap: (){
+      FocusScope.of(context).requestFocus(new FocusNode());
+    },
+    child: Scaffold(
       appBar: appBar(
           title: LanguagesLoader.of(context).translate("Action parameters")),
 //      appBar: appBar(title: 'Action parameters'),
@@ -500,8 +504,8 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
 //            title: Text("Accept"),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.keyboard_return),
-              title: Text(LanguagesLoader.of(context).translate("Return")),
+              icon: Icon(null),
+              title: Text(""),//Text(LanguagesLoader.of(context).translate("Return")),
 //            title: Text('Return'),
             ),
           ],
@@ -530,6 +534,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
               }
             });
           }),
+    ),
     );
   }
 }

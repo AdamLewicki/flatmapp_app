@@ -1,7 +1,5 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
-import 'package:flatmapp/resources/extensions.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/language_constants.dart';
-import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/languages_localizations_delegate.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/routes/AboutRoute.dart';
@@ -18,7 +16,6 @@ import 'package:flatmapp/resources/routes/MarkersRoute.dart';
 import 'package:flatmapp/resources/routes/ProfileRoute.dart';
 import 'package:flatmapp/resources/routes/RegisterRoute.dart';
 import 'package:flatmapp/resources/routes/SettingsRoute.dart';
-import 'package:flatmapp/resources/routes/UpdateMarkerLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter\_localizations/flutter\_localizations.dart';

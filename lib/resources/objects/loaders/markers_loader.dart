@@ -195,15 +195,15 @@ class MarkerLoader {
               called(); //We can pass more then 1 parameter
 
           },
-          draggable: true,
-          onDragEnd: ((newPosition) {
-            print("drag");
-            print(newPosition.latitude);
-            print(newPosition.longitude);
-            if(updatestate=null){
-              updatestate();
-            }
-          }),
+//          draggable: true,
+//          onDragEnd: ((newPosition) {
+//            print("drag");
+//            print(newPosition.latitude);
+//            print(newPosition.longitude);
+//            if(updatestate=null){
+//              updatestate();
+//            }
+//          }),
           infoWindow: InfoWindow(
             title: title,
             snippet: description,

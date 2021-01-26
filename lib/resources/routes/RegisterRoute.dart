@@ -191,7 +191,12 @@ class _RegisterRouteState extends State<RegisterRoute> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return
+      GestureDetector(
+        onTap: (){
+      FocusScope.of(context).requestFocus(new FocusNode());
+    },
+    child: Scaffold(
       appBar: appBar(),
 
       // BODY FORM
@@ -237,6 +242,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
                     break;
                 }
               }),
-    );
+    ),
+      );
   }
 }

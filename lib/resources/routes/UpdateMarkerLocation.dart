@@ -3,6 +3,7 @@
 
 import 'dart:async';
 
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class _UpdateMarkerLocationState extends State< UpdateMarkerLocation > {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: appBar(title: "Update Marker Position"),
+      appBar: appBar(title: LanguagesLoader.of(context).translate("change marker position")),
       body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -72,7 +73,7 @@ class _UpdateMarkerLocationState extends State< UpdateMarkerLocation > {
                   },
                   color: Colors.white,
                   textColor: Colors.green,
-                  child: Text("Update Position".toUpperCase(),
+                  child: Text(LanguagesLoader.of(context).translate("Update Position").toUpperCase(),
                       style: TextStyle(fontSize: 14)),
                 ),
               ),),
