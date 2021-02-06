@@ -247,6 +247,7 @@ class NetLoader {
               description: marker['description'].toString(),
               range: marker['_range'],
               actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
+              queue: marker['queue'],
             );
           });
 

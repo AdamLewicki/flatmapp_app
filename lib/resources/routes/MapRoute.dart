@@ -94,6 +94,7 @@ class _MapRouteState extends State<MapRoute> {
     'description': "marker presenting chosen position",
     'range': 12,
     'actions': [],
+    'queue': PrefService.getInt('number_of_markers'),
   };
 
   @override
@@ -300,13 +301,13 @@ widget._markerLoader.updateStateMethod((){
     // set marker data to temporary marker
     if (temp != null) {
       _formMarkerData['title'] = temp.title;
-      _formMarkerData['description'] = temp.description;
+      _formMarkerData['queue'] = temp.queue;
       _formMarkerData['range'] = temp.range.toInt();
     }
 
     // update controllers
     _formTitleController.text = _formMarkerData['title'].toString();
-    _formDescriptionController.text = _formMarkerData['description'].toString();
+    _formDescriptionController.text = _formMarkerData['queue'].toString();
     _formRangeController.text = _formMarkerData['range'].toString();
   }
 
@@ -358,31 +359,20 @@ widget._markerLoader.updateStateMethod((){
       },
     );
   }
-
+  // TODO change description field to marker queue field
   Widget _buildMarkerDescriptionField(context) {
-    return TextFormField(
-      controller: _formDescriptionController,
-      style: bodyText(),
-      decoration: textFieldStyle(
-          labelTextStr:
-              LanguagesLoader.of(context).translate("Marker description"),
-          hintTextStr: LanguagesLoader.of(context)
-              .translate("Marker description goes here")),
-      onSaved: (String value) {
-        _formMarkerData['description'] = value;
-      },
-      textInputAction: TextInputAction.next,
-      validator: (text) {
-        if (text == null || text.isEmpty) {
-          return LanguagesLoader.of(context)
-              .translate("This field can not be empty");
-        }
-        return null;
-      },
-      onFieldSubmitted: (String value) {
-        _formMarkerData['description'] = value;
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Tooltip(
+          message:
+          LanguagesLoader.of(context).translate("marker range in meters"),
+          child: new Text(
+            LanguagesLoader.of(context).translate("marker queue") + _formMarkerData['queue'].toString(),
+            style: bodyText(),
+          ),
+        ),
+      ],
     );
   }
 
@@ -462,8 +452,7 @@ widget._markerLoader.updateStateMethod((){
 
       // bug on older api (25) - validation does not save form state.
       // To prevent this behaviour, additional if is present.
-      if (_formMarkerData['title'] == "" ||
-          _formMarkerData['description'] == "") {
+      if (_formMarkerData['title'] == "") {
         Fluttertoast.showToast(
           msg: LanguagesLoader.of(context)
               .translate("Please submit title and description and press enter"),
@@ -488,6 +477,11 @@ widget._markerLoader.updateStateMethod((){
             range: _formMarkerData['range'].toDouble(),
             actions:
                 widget._markerLoader.getMarkerActions(id: _selectedMarkerId),
+            queue: _selectedMarkerId == 'temporary'
+                ? PrefService.getInt('number_of_markers') + 1
+                : _formMarkerData['queue'] is String ?
+            int.parse(_formMarkerData['queue']) : _formMarkerData['queue'],
+
           );
         });
 

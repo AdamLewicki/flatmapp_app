@@ -73,7 +73,8 @@ main() async {
     'login': '',
     'isolate_spawned': false,
     'community_icon': 'default',
-    'licence_accepted': false
+    'licence_accepted': false,
+    'number_of_markers': 0,
   });
 
   // get start page

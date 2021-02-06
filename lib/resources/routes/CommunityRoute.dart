@@ -77,7 +77,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
     return temp.toLatLng();
   }
 
-  void addMarkerFromCategory(Map<String, dynamic> item, String _id) {
+  void addMarkerFromCategory(Map<String, dynamic> item, String _id, int queue) {
     item['radius'] = _formCategoryData['range'];
 
     widget._markerLoader.addMarker(
@@ -88,6 +88,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
       description: item['address'],
       range: item['radius'].toDouble(),
       actions: widget._markerLoader.getMarkerActions(id: "temporary"),
+      queue: queue,
     );
   }
 
@@ -363,11 +364,13 @@ class _CommunityRouteState extends State<CommunityRoute> {
         ),
         leading: Icon(Icons.add_circle_outline),
         onTap: () {
+          // TODO add global value which keeps last prioryty number
+          int last_queue_index = PrefService.getInt('number_of_markers');
           for (int index = 0; index < _placesDescriptions.length; index++) {
             // add placemark method
             String _id = widget._markerLoader.generateId();
             print(_placesDescriptions[index]);
-            addMarkerFromCategory(_placesDescriptions[index], _id);
+            addMarkerFromCategory(_placesDescriptions[index], _id, last_queue_index + index + 1);
           }
           setState(() {
             if_already_added = true;
@@ -489,10 +492,8 @@ class _CommunityRouteState extends State<CommunityRoute> {
                         onPressed: () {
                           // add placemark method
                           String _id = widget._markerLoader.generateId();
-
                           addMarkerFromCategory(
-                              _placesDescriptions[index], _id);
-
+                              _placesDescriptions[index], _id, PrefService.getInt('number_of_markers') + 1);
                           // set selected marker
                           PrefService.setString('selected_marker', _id);
                           // Navigate to the profile screen using a named route.

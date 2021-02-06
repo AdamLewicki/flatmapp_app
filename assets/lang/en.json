@@ -117,7 +117,7 @@
   "Marker title goes here": "Marker title goes here",
   "Marker description": "Marker description",
   "Marker description goes here": "Marker description goes here",
-  "Please submit title and description and press enter": "Please submit title and description and press enter",
+  "Please submit title and description and press enter": "Please submit title and press enter",
   "Added marker": "Added marker",
   "Find marker": "Find marker",
   "Remove marker": "Remove marker",
@@ -161,6 +161,7 @@
   "Privacy policy": "Privacy policy: ",
   "Privacy policy link": "https://flatmapp.flycricket.io/privacy.html",
   "facebook": "Our Facebook:",
+  "marker queue": "Marker's queue:",
 
   "---------------": "new lines should be added after this line in order to add them to other dictionaries",
   "new line of text": "chwilowechwilowechwilowe"

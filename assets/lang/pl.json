@@ -115,7 +115,7 @@
   "Marker title goes here": "Tutaj wpisz tytuł znacznika",
   "Marker description": "Opis znacznika",
   "Marker description goes here": "Tutaj wpisz opis znacznika",
-  "Please submit title and description and press enter": "Prześlij tytuł i opis i naciśnij Enter",
+  "Please submit title and description and press enter": "Prześlij tytuł i naciśnij Enter",
   "Added marker": "Dodano znacznik",
   "Find marker": "Znajdź znacznik",
   "Remove marker": "Usuń znacznik",
@@ -156,6 +156,7 @@
   "Privacy policy": "Polityka prywatności: ",
   "Privacy policy link": "https://prod.guideme24.pl/privacy-policy/3291",
   "facebook": "Nasz Facebook:",
+  "marker queue": "Kolejka znacznika:",
 
   "---------------": "nowe linie należy dodać po tej linii, aby dodać je do innych słowników",
   "new line of text": "chwilowechwilowechwilowe"

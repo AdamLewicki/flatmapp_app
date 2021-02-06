@@ -6,7 +6,6 @@ import 'package:flatmapp/resources/objects/loaders/geofence_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
-import 'package:flatmapp/resources/routes/MapRoute.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -147,6 +146,8 @@ class MarkerLoader {
         description: markerData.description,
         range: markerData.range,
         actions: markerData.actions,
+          queue: markerData.queue
+
       );
     });
   }
@@ -177,9 +178,10 @@ class MarkerLoader {
       String title,
       String description,
       double range,
-      List<FlatMappAction> actions}) {
+        List<FlatMappAction> actions,
+        int queue}) {
     _markersDescriptions[id] = FlatMappMarker(position.latitude,
-        position.longitude, range, -420, title, description, icon, actions);
+        position.longitude, range, -420, title, description, icon, actions, queue);
 
     iconsLoader.getMarkerImage(icon).then((iconBitmap) {
       googleMarkers[id] = Marker(
@@ -224,10 +226,13 @@ class MarkerLoader {
     if (id != "temporary") {
       GeofenceLoader.addGeofence(
           "$id;${position.latitude};${position.longitude};${range}");
+      int number_of_markers = PrefService.getInt('number_of_markers');
+      PrefService.setInt('number_of_markers', number_of_markers+1);
     }
   }
 
   void removeMarker({String id}) {
+    int marker_queue = _markersDescriptions[id].queue;
     _markersDescriptions.remove(id);
     googleMarkers.remove(id);
     zones.remove(id);
@@ -236,6 +241,16 @@ class MarkerLoader {
     if (PrefService.get('selected_marker') == id) {
       PrefService.setString('selected_marker', 'temporary');
     }
+    _markersDescriptions.forEach((key, value) {
+      if(value.queue > marker_queue) value.queue = value.queue - 1;
+    });
+
+    if (id != "temporary"){
+      int number_of_markers = PrefService.getInt('number_of_markers');
+      PrefService.setInt('number_of_markers', number_of_markers - 1);
+    }
+
+
   }
 
   // save markers to local storage
@@ -253,6 +268,7 @@ class MarkerLoader {
       description: "",
       range: 12,
       actions: [],
+      queue: PrefService.getInt('number_of_markers') + 1,
     );
   }
 
@@ -322,6 +338,11 @@ class MarkerLoader {
   Future<void> removeAllMarkers() async {
     // copy temporary marker
     FlatMappMarker _temp = getMarkerDescription("temporary");
+
+    _markersDescriptions.forEach((key, value) {
+      if(key != 'temporary') GeofenceLoader.deleteGeofence(key);
+    });
+    PrefService.setInt('number_of_markers', 0);
 
     // from non-persistent storage
     _markersDescriptions.clear();
