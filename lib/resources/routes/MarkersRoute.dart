@@ -225,7 +225,7 @@ class _MarkersRouteState extends State<MarkersRoute> {
                       ),
                       title: Text(_marker.title, style: bodyText()),
                       subtitle: Text(LanguagesLoader.of(context)
-                          .translate("marker queue") + _marker.queue.toString(), style: footer()),
+                          .translate("marker queue") + " " +_marker.queue.toString(), style: footer()),
                       trailing: Icon(Icons.keyboard_arrow_down),
                       children: <Widget>[
                         Row(
