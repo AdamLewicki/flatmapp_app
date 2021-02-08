@@ -79,7 +79,8 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
   void addMarkerFromCategory(Map<String, dynamic> item, String _id, int queue) {
     item['radius'] = _formCategoryData['range'];
-
+    int number_of_markers = PrefService.getInt('number_of_markers');
+    PrefService.setInt('number_of_markers', number_of_markers + 1);
     widget._markerLoader.addMarker(
       id: _id,
       position: LatLng(item['position_x'], item['position_y']),
@@ -90,6 +91,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
       actions: widget._markerLoader.getMarkerActions(id: "temporary"),
       queue: queue,
     );
+    widget._markerLoader.addTemporaryMarkerAtSamePosition();
   }
 
   //

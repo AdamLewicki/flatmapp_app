@@ -45,7 +45,7 @@ class _MapRouteState extends State<MapRoute> {
 
   // form controllers:
   TextEditingController _formTitleController = new TextEditingController();
-  TextEditingController _formDescriptionController =
+  TextEditingController _formQueueController =
       new TextEditingController();
   TextEditingController _formRangeController = new TextEditingController();
 
@@ -91,7 +91,7 @@ class _MapRouteState extends State<MapRoute> {
   Map<String, dynamic> _formMarkerData = {
     'id': "temporary",
     'title': "temporary marker",
-    'description': "marker presenting chosen position",
+    'description': "",
     'range': 12,
     'actions': [],
     'queue': PrefService.getInt('number_of_markers'),
@@ -303,11 +303,12 @@ widget._markerLoader.updateStateMethod((){
       _formMarkerData['title'] = temp.title;
       _formMarkerData['queue'] = temp.queue;
       _formMarkerData['range'] = temp.range.toInt();
+      PrefService.setInt("selected_marker_queue", temp.queue);
     }
 
     // update controllers
     _formTitleController.text = _formMarkerData['title'].toString();
-    _formDescriptionController.text = _formMarkerData['queue'].toString();
+    _formQueueController.text = _formMarkerData['queue'].toString();
     _formRangeController.text = _formMarkerData['range'].toString();
   }
 
@@ -359,8 +360,7 @@ widget._markerLoader.updateStateMethod((){
       },
     );
   }
-  // TODO change description field to marker queue field
-  Widget _buildMarkerDescriptionField(context) {
+  Widget _buildMarkerQueueField(context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -368,9 +368,59 @@ widget._markerLoader.updateStateMethod((){
           message:
           LanguagesLoader.of(context).translate("marker range in meters"),
           child: new Text(
-            LanguagesLoader.of(context).translate("marker queue") + _formMarkerData['queue'].toString(),
+            LanguagesLoader.of(context).translate("marker queue"),
             style: bodyText(),
           ),
+        ),
+        SizedBox(height: 20),
+        IconButton(
+          icon: Icon(Icons.remove),
+          onPressed: () {
+            if (_formMarkerData['queue'] is String)
+              _formMarkerData['queue'] = int.parse(_formMarkerData['queue']);
+            if (_formMarkerData['queue'] > 1) {
+              setState(() {
+                _formKey.currentState.save();
+                _formMarkerData['queue'] -= 1;
+                _formQueueController.text = _formMarkerData['queue'].toString();
+              });
+            }
+          },
+        ),
+        Tooltip(
+          message:
+          LanguagesLoader.of(context).translate("marker range in meters"),
+          child: new Text(
+            _formMarkerData['queue'].toString(),
+            style: bodyText(),
+          ),
+        ),
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            _formKey.currentState.save();
+            if (_formMarkerData['queue'] is String)
+              _formMarkerData['queue'] = int.parse(_formMarkerData['queue']);
+            if(PrefService.getString("selected_marker") == 'temporary') {
+              if (_formMarkerData['queue'] <
+                  PrefService.getInt('number_of_markers') + 1) {
+                setState(() {
+                  _formMarkerData['queue'] += 1;
+                  _formQueueController.text =
+                      _formMarkerData['queue'].toString();
+                });
+              }
+            }else{
+              if (_formMarkerData['queue'] <
+                  PrefService.getInt('number_of_markers')) {
+                setState(() {
+                  _formMarkerData['queue'] += 1;
+                  _formQueueController.text =
+                      _formMarkerData['queue'].toString();
+                });
+              }
+            }
+          },
         ),
       ],
     );
@@ -464,6 +514,13 @@ widget._markerLoader.updateStateMethod((){
 
         setState(() {
           // adding a new marker to map
+          widget._markerLoader.markersQueueReorder(_formMarkerData['queue'] is String ?
+          int.parse(_formMarkerData['queue']) : _formMarkerData['queue'],
+              PrefService.getInt("selected_marker_queue"));
+          if(_selectedMarkerId == 'temporary'){
+            int number_of_markers = PrefService.getInt('number_of_markers');
+            PrefService.setInt('number_of_markers', number_of_markers + 1);
+          }
           widget._markerLoader.addMarker(
             id: _selectedMarkerId == 'temporary'
                 ? widget._markerLoader.generateId()
@@ -477,11 +534,8 @@ widget._markerLoader.updateStateMethod((){
             range: _formMarkerData['range'].toDouble(),
             actions:
                 widget._markerLoader.getMarkerActions(id: _selectedMarkerId),
-            queue: _selectedMarkerId == 'temporary'
-                ? PrefService.getInt('number_of_markers') + 1
-                : _formMarkerData['queue'] is String ?
+            queue: _formMarkerData['queue'] is String ?
             int.parse(_formMarkerData['queue']) : _formMarkerData['queue'],
-
           );
         });
 
@@ -619,7 +673,7 @@ widget._markerLoader.updateStateMethod((){
               SizedBox(height: 10),
               _buildMarkerNameField(context),
               SizedBox(height: 10),
-              _buildMarkerDescriptionField(context),
+              _buildMarkerQueueField(context),
               SizedBox(height: 10),
 
               Row(

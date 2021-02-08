@@ -176,6 +176,7 @@ class NetLoader {
               "title": value.title,
               "icon": value.icon,
               "description": value.description,
+              "queue": value.queue,
               // TODO determine what action_detail means
               // "action_detail": "none",
             });
@@ -246,8 +247,9 @@ class NetLoader {
               title: marker['title'].toString(),
               description: marker['description'].toString(),
               range: marker['_range'],
-              actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
               queue: marker['queue'],
+              actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
+
             );
           });
 

@@ -85,7 +85,6 @@ class MarkerLoader {
   // load markers from local storage
   Future loadMarkers() async {
     String path = await getFilePath();
-
     // if marker storage does exist
     if (await File(path).exists()) {
       // get storage content
@@ -226,8 +225,6 @@ class MarkerLoader {
     if (id != "temporary") {
       GeofenceLoader.addGeofence(
           "$id;${position.latitude};${position.longitude};${range}");
-      int number_of_markers = PrefService.getInt('number_of_markers');
-      PrefService.setInt('number_of_markers', number_of_markers+1);
     }
   }
 
@@ -250,12 +247,20 @@ class MarkerLoader {
       PrefService.setInt('number_of_markers', number_of_markers - 1);
     }
 
-
   }
 
   // save markers to local storage
   void saveMarkersFromBackup({Map<String, FlatMappMarker> content}) async {
     _markersDescriptions = content;
+    PrefService.setInt('number_of_markers', 0);
+    int number_of_markers = 0;
+    _markersDescriptions.forEach((key, value) {
+      if(key != "temporary")
+      {
+        number_of_markers++;
+        PrefService.setInt('number_of_markers', number_of_markers);
+      }
+    });
     saveMarkers();
   }
 
@@ -263,6 +268,20 @@ class MarkerLoader {
     addMarker(
       id: "temporary",
       position: position,
+      icon: 'default',
+      title: "",
+      description: "",
+      range: 12,
+      actions: [],
+      queue: PrefService.getInt('number_of_markers') + 1,
+    );
+  }
+
+  void addTemporaryMarkerAtSamePosition() {
+    addMarker(
+      id: "temporary",
+      position: LatLng(_markersDescriptions['temporary'].position_x,
+          _markersDescriptions['temporary'].position_y),
       icon: 'default',
       title: "",
       description: "",
@@ -322,8 +341,6 @@ class MarkerLoader {
     if(updatestate!=null)
       updatestate(); //We can pass more then 1 parameter
 
-
-
     saveMarkers();
   }
 
@@ -355,4 +372,24 @@ class MarkerLoader {
 
     saveMarkers();
   }
+
+  void markersQueueReorder(int newIndex, int oldIndex){
+    if(newIndex > oldIndex){
+      _markersDescriptions.forEach((key, value) {
+        if (value.queue <= newIndex && value.queue > oldIndex){
+          value.queue--;
+        }
+      });
+    }
+    else{
+      if(newIndex < oldIndex){
+        _markersDescriptions.forEach((key, value) {
+          if (value.queue >= newIndex && value.queue < oldIndex){
+            value.queue++;
+          }
+        });
+      }
+    }
+  }
+
 }
