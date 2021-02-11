@@ -249,9 +249,12 @@ class NetLoader {
               range: marker['_range'],
               queue: marker['queue'],
               actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
-
             );
+            int number_of_markers = PrefService.getInt('number_of_markers');
+            PrefService.setInt('number_of_markers', number_of_markers + 1);
           });
+
+          markerLoader.addTemporaryMarkerAtSamePosition();
 
           // save backup to file
           markerLoader.saveMarkers();
