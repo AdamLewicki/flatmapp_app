@@ -530,7 +530,7 @@ widget._markerLoader.updateStateMethod((){
                 .position,
             icon: PrefService.getString('selected_icon'),
             title: _formMarkerData['title'].toString(),
-            description: _formMarkerData['description'].toString(),
+            description: 'description',
             range: _formMarkerData['range'].toDouble(),
             actions:
                 widget._markerLoader.getMarkerActions(id: _selectedMarkerId),
