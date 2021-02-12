@@ -27,10 +27,10 @@ class MainActivity: FlutterActivity() {
   private var receiver = GeofenceBroadcastReceiver()
 
   // fix engine crash on app leaving via left arrow
-  override fun onDestroy() {
-    flutterEngine?.platformViewsController?.onFlutterViewDestroyed()
-    super.onDestroy()
-  }
+//  override fun onDestroy() {
+//    flutterEngine?.platformViewsController?.onFlutterViewDestroyed()
+//    super.onDestroy()
+//  }
 
   override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)

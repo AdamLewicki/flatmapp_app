@@ -284,7 +284,11 @@ class _LogInRouteState extends State<LogInRoute> {
   Widget build(BuildContext context) {
     // show licence agreement
 //    Future.delayed(Duration.zero, () => showLicenceAgreement(context));
-    return Scaffold(
+    return GestureDetector(
+        onTap: (){
+      FocusScope.of(context).requestFocus(new FocusNode());
+    },
+    child: Scaffold(
       appBar: appBar(),
       key: Key("login_route_key"),
       // BODY FORM
@@ -340,6 +344,7 @@ class _LogInRouteState extends State<LogInRoute> {
                     break;
                 }
               }),
+    ),
     );
   }
 }

@@ -7,7 +7,6 @@ import 'package:preferences/preferences.dart';
 
 class IconsRoute extends StatelessWidget {
   final IconsLoader icons = IconsLoader();
-
   Widget _iconCard(context, key) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -24,6 +23,7 @@ class IconsRoute extends StatelessWidget {
                     PrefService.setString('selected_icon', key);
                     // Navigate back
                     Navigator.pop(context);
+
                   },
                   padding: EdgeInsets.all(0.0),
                   child: Image.asset(icons.markerImageLocal[key]),
