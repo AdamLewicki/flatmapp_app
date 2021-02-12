@@ -176,6 +176,7 @@ class NetLoader {
               "title": value.title,
               "icon": value.icon,
               "description": value.description,
+              "queue": value.queue,
               // TODO determine what action_detail means
               // "action_detail": "none",
             });
@@ -246,9 +247,14 @@ class NetLoader {
               title: marker['title'].toString(),
               description: marker['description'].toString(),
               range: marker['_range'],
+              queue: marker['queue'],
               actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
             );
+            int number_of_markers = PrefService.getInt('number_of_markers');
+            PrefService.setInt('number_of_markers', number_of_markers + 1);
           });
+
+          markerLoader.addTemporaryMarkerAtSamePosition();
 
           // save backup to file
           markerLoader.saveMarkers();

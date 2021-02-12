@@ -21,6 +21,8 @@ class MarkerLoader {
 
   // google maps markers set
   Map<String, Marker> googleMarkers = <String, Marker>{};
+   VoidCallback called;
+   VoidCallback updatestate;
 
   // zones set
   Map<String, Circle> zones = <String, Circle>{};
@@ -83,7 +85,6 @@ class MarkerLoader {
   // load markers from local storage
   Future loadMarkers() async {
     String path = await getFilePath();
-
     // if marker storage does exist
     if (await File(path).exists()) {
       // get storage content
@@ -144,6 +145,8 @@ class MarkerLoader {
         description: markerData.description,
         range: markerData.range,
         actions: markerData.actions,
+          queue: markerData.queue
+
       );
     });
   }
@@ -153,6 +156,19 @@ class MarkerLoader {
     return UniqueKey().toString();
   }
 
+  mySlowMethod(VoidCallback listener) async {
+    // Here your uncertain task
+    // In our case, for example, we call the listener every 2 seconds
+    called = listener;
+
+  }
+
+  updateStateMethod(VoidCallback listener) async {
+    // Here your uncertain task
+    // In our case, for example, we call the listener every 2 seconds
+    updatestate = listener;
+
+  }
   // add or edit marker
   void addMarker(
       {String id,
@@ -161,9 +177,10 @@ class MarkerLoader {
       String title,
       String description,
       double range,
-      List<FlatMappAction> actions}) {
+        List<FlatMappAction> actions,
+        int queue}) {
     _markersDescriptions[id] = FlatMappMarker(position.latitude,
-        position.longitude, range, -420, title, description, icon, actions);
+        position.longitude, range, -420, title, description, icon, actions, queue);
 
     iconsLoader.getMarkerImage(icon).then((iconBitmap) {
       googleMarkers[id] = Marker(
@@ -174,12 +191,24 @@ class MarkerLoader {
             // set marker as selected on tap
             PrefService.setString('selected_marker', id);
             PrefService.setString('selected_icon', icon);
+            print("ok on marker tap");
+            if(called!=null)
+              called(); //We can pass more then 1 parameter
+
           },
+//          draggable: true,
+//          onDragEnd: ((newPosition) {
+//            print("drag");
+//            print(newPosition.latitude);
+//            print(newPosition.longitude);
+//            if(updatestate=null){
+//              updatestate();
+//            }
+//          }),
           infoWindow: InfoWindow(
             title: title,
             snippet: description,
           ));
-
       // add zone
       zones[id] = Circle(
         circleId: CircleId(id),
@@ -190,7 +219,6 @@ class MarkerLoader {
         strokeColor: Colors.redAccent,
       );
     });
-
     // save markers
     saveMarkers();
 
@@ -201,6 +229,7 @@ class MarkerLoader {
   }
 
   void removeMarker({String id}) {
+    int marker_queue = _markersDescriptions[id].queue;
     _markersDescriptions.remove(id);
     googleMarkers.remove(id);
     zones.remove(id);
@@ -209,11 +238,29 @@ class MarkerLoader {
     if (PrefService.get('selected_marker') == id) {
       PrefService.setString('selected_marker', 'temporary');
     }
+    _markersDescriptions.forEach((key, value) {
+      if(value.queue > marker_queue) value.queue = value.queue - 1;
+    });
+
+    if (id != "temporary"){
+      int number_of_markers = PrefService.getInt('number_of_markers');
+      PrefService.setInt('number_of_markers', number_of_markers - 1);
+    }
+
   }
 
   // save markers to local storage
   void saveMarkersFromBackup({Map<String, FlatMappMarker> content}) async {
     _markersDescriptions = content;
+    PrefService.setInt('number_of_markers', 0);
+    int number_of_markers = 0;
+    _markersDescriptions.forEach((key, value) {
+      if(key != "temporary")
+      {
+        number_of_markers++;
+        PrefService.setInt('number_of_markers', number_of_markers);
+      }
+    });
     saveMarkers();
   }
 
@@ -226,6 +273,21 @@ class MarkerLoader {
       description: "",
       range: 12,
       actions: [],
+      queue: PrefService.getInt('number_of_markers') + 1,
+    );
+  }
+
+  void addTemporaryMarkerAtSamePosition() {
+    addMarker(
+      id: "temporary",
+      position: LatLng(_markersDescriptions['temporary'].position_x,
+          _markersDescriptions['temporary'].position_y),
+      icon: 'default',
+      title: "",
+      description: "",
+      range: 12,
+      actions: [],
+      queue: PrefService.getInt('number_of_markers') + 1,
     );
   }
 
@@ -276,6 +338,9 @@ class MarkerLoader {
         (_markersDescriptions[id].actions.length + 1).toDouble();
 
     _markersDescriptions[id].actions.add(action);
+    if(updatestate!=null)
+      updatestate(); //We can pass more then 1 parameter
+
     saveMarkers();
   }
 
@@ -291,6 +356,11 @@ class MarkerLoader {
     // copy temporary marker
     FlatMappMarker _temp = getMarkerDescription("temporary");
 
+    _markersDescriptions.forEach((key, value) {
+      if(key != 'temporary') GeofenceLoader.deleteGeofence(key);
+    });
+    PrefService.setInt('number_of_markers', 0);
+
     // from non-persistent storage
     _markersDescriptions.clear();
     googleMarkers.clear();
@@ -302,4 +372,24 @@ class MarkerLoader {
 
     saveMarkers();
   }
+
+  void markersQueueReorder(int newIndex, int oldIndex){
+    if(newIndex > oldIndex){
+      _markersDescriptions.forEach((key, value) {
+        if (value.queue <= newIndex && value.queue > oldIndex){
+          value.queue--;
+        }
+      });
+    }
+    else{
+      if(newIndex < oldIndex){
+        _markersDescriptions.forEach((key, value) {
+          if (value.queue >= newIndex && value.queue < oldIndex){
+            value.queue++;
+          }
+        });
+      }
+    }
+  }
+
 }

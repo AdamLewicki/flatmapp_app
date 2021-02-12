@@ -51,6 +51,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 val markerPath = context.filesDir.path + "/../app_flutter"
                 val markerFile = File(markerPath + "/marker_storage.json")
                 val markerMap = HashMap<String, ArrayList<Action>>()
+                val markerQueueMap = HashMap<Int, String>()
+                val queueList = ArrayList<Int>()
                 val transition = p0[0]?.geofenceTransition
 //                Log.i(TAG, transition.toString())
 //                Log.i(TAG, markerFile.readText()) // Log to be erased later
@@ -69,6 +71,11 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                         while (reader.hasNext()) {
                             val name2 = reader.nextName()
                             when (name2) {
+                                "queue" -> {
+                                    val queue = reader.nextString().toInt()
+                                    markerQueueMap[queue] = name
+                                    queueList.add(queue)
+                                }
                                 "actions" -> {
                                     reader.beginArray()
                                     while (reader.hasNext()) {
@@ -137,10 +144,12 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 }
                 reader.endObject()
                 targetStream.close()
-                for(marker:String in markerMap.keys)
+                queueList.sort()
+                for(markerQueue:Int in queueList)
                 {
-                    Log.i(TAG, "$marker's list of actions:")
-                    for(action:Action in markerMap[marker]!!)
+                    val actionList = markerMap[markerQueueMap[markerQueue]]
+                    Log.i(TAG, "${markerQueueMap[markerQueue]} is $markerQueue in queue")
+                    for(action:Action in actionList!!)
                     {
                         Log.i(TAG, action.name)
                         when(action.name)

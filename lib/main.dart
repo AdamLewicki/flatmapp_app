@@ -1,4 +1,5 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:flatmapp/resources/objects/loaders/languages/language_constants.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/languages_localizations_delegate.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/routes/AboutRoute.dart';
@@ -72,7 +73,8 @@ main() async {
     'login': '',
     'isolate_spawned': false,
     'community_icon': 'default',
-    'licence_accepted': false
+    'licence_accepted': false,
+    'number_of_markers': 0,
   });
 
   // get start page
@@ -145,7 +147,33 @@ main() async {
   //runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+
+  static void setLocale(BuildContext context, Locale newLocale) {
+    _MyAppState state = context.findAncestorStateOfType<_MyAppState>();
+    state.setLocale(newLocale);
+  }
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  Locale _locale;
+  setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
+  @override
+  void didChangeDependencies() {
+    getLocale().then((locale) {
+      setState(() {
+        this._locale = locale;
+      });
+    });
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
     // load app
@@ -159,6 +187,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: theme,
             initialRoute: initScreen,
+            locale: _locale,
             routes: {
               // When navigating to the "/name" route, build the NameRoute widget.
               '/map': (context) => MapRoute(_markerLoader),
@@ -176,6 +205,7 @@ class MyApp extends StatelessWidget {
               '/action_parameters': (context) =>
                   ActionParametersRoute(_markerLoader),
               '/markers': (context) => MarkersRoute(_markerLoader),
+
             },
             // TODO add all languages available here
             supportedLocales: [
@@ -183,6 +213,7 @@ class MyApp extends StatelessWidget {
               const Locale('en', 'US'),
               const Locale('es', 'ES'),
             ],
+
             localizationsDelegates: [
               const LanguagesLocalizationsDelegate(),
               GlobalMaterialLocalizations.delegate,
