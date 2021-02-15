@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/group_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
@@ -13,8 +14,9 @@ import 'package:preferences/preferences.dart';
 class ProfileRoute extends StatefulWidget {
   // data loader
   MarkerLoader _markerLoader = MarkerLoader();
+  GroupLoader _groupLoader = GroupLoader();
 
-  ProfileRoute(this._markerLoader, {Key key}) : super(key: key);
+  ProfileRoute(this._markerLoader, this._groupLoader, {Key key}) : super(key: key);
 
   @override
   _ProfileRouteState createState() => _ProfileRouteState();
@@ -119,7 +121,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
                 ),
                 trailing: Icon(Icons.file_download),
                 onTap: () {
-                  _netLoader.getBackup(context, widget._markerLoader);
+                  _netLoader.getBackup(context, widget._markerLoader, widget._groupLoader);
                 },
               ),
               ExpansionTile(

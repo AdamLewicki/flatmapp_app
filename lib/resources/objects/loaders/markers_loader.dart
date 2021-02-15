@@ -145,8 +145,8 @@ class MarkerLoader {
         description: markerData.description,
         range: markerData.range,
         actions: markerData.actions,
-          queue: markerData.queue
-
+          queue: markerData.queue,
+          groupId: markerData.groupId
       );
     });
   }
@@ -178,9 +178,11 @@ class MarkerLoader {
       String description,
       double range,
         List<FlatMappAction> actions,
-        int queue}) {
+        int queue,
+        String groupId,
+      }) {
     _markersDescriptions[id] = FlatMappMarker(position.latitude,
-        position.longitude, range, -420, title, description, icon, actions, queue);
+        position.longitude, range, -420, title, description, icon, actions, queue, groupId);
 
     iconsLoader.getMarkerImage(icon).then((iconBitmap) {
       googleMarkers[id] = Marker(
@@ -274,6 +276,7 @@ class MarkerLoader {
       range: 12,
       actions: [],
       queue: PrefService.getInt('number_of_markers') + 1,
+      groupId: '',
     );
   }
 
@@ -288,6 +291,7 @@ class MarkerLoader {
       range: 12,
       actions: [],
       queue: PrefService.getInt('number_of_markers') + 1,
+      groupId: '',
     );
   }
 

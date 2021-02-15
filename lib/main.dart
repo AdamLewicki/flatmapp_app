@@ -1,4 +1,5 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:flatmapp/resources/objects/loaders/group_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/language_constants.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/languages_localizations_delegate.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
@@ -27,6 +28,8 @@ String initScreen;
 
 // data loader
 final MarkerLoader _markerLoader = MarkerLoader();
+final GroupLoader _groupLoader = GroupLoader();
+
 
 void _setUserPosition() async {
   // move temporary marker to user's location
@@ -59,6 +62,7 @@ main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PrefService.init(prefix: 'pref_');
   await GlobalConfiguration().loadFromAsset("app_settings");
+  _groupLoader.markerLoader = _markerLoader;
 
   PrefService.setDefaultValues({
     'project_description': 'FlatMapp prototype',
@@ -123,6 +127,8 @@ main() async {
   }
 
   await _markerLoader.loadMarkers();
+  await _groupLoader.loadGroups();
+
 
 //  // check location permission
 //  if (!(await Permission.location.request().isGranted)) {
@@ -191,8 +197,8 @@ class _MyAppState extends State<MyApp> {
             routes: {
               // When navigating to the "/name" route, build the NameRoute widget.
               '/map': (context) => MapRoute(_markerLoader),
-              '/profile': (context) => ProfileRoute(_markerLoader),
-              '/community': (context) => CommunityRoute(_markerLoader),
+              '/profile': (context) => ProfileRoute(_markerLoader, _groupLoader),
+              '/community': (context) => CommunityRoute(_markerLoader, _groupLoader),
               '/settings': (context) => SettingsRoute(),
               '/about': (context) => AboutRoute(),
               '/login': (context) => LogInRoute(),

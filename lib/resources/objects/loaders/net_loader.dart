@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:flatmapp/resources/objects/loaders/group_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
 import 'package:flutter/cupertino.dart';
@@ -221,11 +222,15 @@ class NetLoader {
 
   // odczyt znaczników z bazy
   Future<void> getBackup(
-      BuildContext context, MarkerLoader markerLoader) async {
+      BuildContext context, MarkerLoader markerLoader, GroupLoader groupLoader) async {
     bool connected = await checkNetworkConnection();
     if (connected) {
       try {
         List<dynamic> parsedMarkers = await _getFromServer(
+          endpoint: "/api/backup/",
+        );
+        // TODO replace endpoint to one which will be set up on server
+        List<dynamic> parsedGroups = await _getFromServer(
           endpoint: "/api/backup/",
         );
 
@@ -237,7 +242,7 @@ class NetLoader {
         } else {
           // remove markers from local storage
           markerLoader.removeAllMarkers();
-
+          groupLoader.removeAllGroups();
           // add markers
           parsedMarkers.forEach((marker) {
             markerLoader.addMarker(
@@ -249,6 +254,7 @@ class NetLoader {
               range: marker['_range'],
               queue: marker['queue'],
               actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
+              groupId: marker['groupId'],
             );
             int number_of_markers = PrefService.getInt('number_of_markers');
             PrefService.setInt('number_of_markers', number_of_markers + 1);
@@ -258,8 +264,26 @@ class NetLoader {
 
           // save backup to file
           markerLoader.saveMarkers();
+          if (parsedGroups.isNotEmpty) {
+            parsedGroups.forEach((group) {
+              groupLoader.addGroup(
+                  group["id"],
+                  group["name"].toString(),
+                  group["range"],
+                  group["icon"].toString(),
+                  toActionsList(List<dynamic>.from(group['Action_Name'])),
+                  <String>[]
+              );
+            });
+            markerLoader.getMarkersDescriptions().forEach((markerId, marker) {
+              if (marker.groupId != '') {
+                groupLoader.addMarkerToGroup(marker.groupId, markerId);
+              }
+            });
 
-          showToast("Backup downloaded successfully");
+
+          }
+            showToast("Backup downloaded successfully");
         }
       } on SocketException catch (e) {
         print(e);

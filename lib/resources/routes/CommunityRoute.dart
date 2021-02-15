@@ -1,4 +1,5 @@
 import 'package:flatmapp/resources/extensions.dart';
+import 'package:flatmapp/resources/objects/loaders/group_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
@@ -16,8 +17,9 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 // Putting language dictionaries seams done
 // ignore: must_be_immutable
 class CommunityRoute extends StatefulWidget {
-  MarkerLoader _markerLoader = MarkerLoader(); // TODO unused element
-  CommunityRoute(this._markerLoader, {Key key}) : super(key: key);
+  MarkerLoader _markerLoader = MarkerLoader();
+  GroupLoader _groupLoader = GroupLoader();
+  CommunityRoute(this._markerLoader, this._groupLoader, {Key key}) : super(key: key);
 
   @override
   _CommunityRouteState createState() => _CommunityRouteState();
@@ -77,7 +79,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
     return temp.toLatLng();
   }
 
-  void addMarkerFromCategory(Map<String, dynamic> item, String _id, int queue) {
+  void addMarkerFromCategory(Map<String, dynamic> item, String _id, int queue, String groupId) {
     item['radius'] = _formCategoryData['range'];
     int number_of_markers = PrefService.getInt('number_of_markers');
     PrefService.setInt('number_of_markers', number_of_markers + 1);
@@ -90,7 +92,9 @@ class _CommunityRouteState extends State<CommunityRoute> {
       range: item['radius'].toDouble(),
       actions: widget._markerLoader.getMarkerActions(id: "temporary"),
       queue: queue,
+      groupId: groupId,
     );
+    widget._groupLoader.addMarkerToGroup(groupId, _id);
     widget._markerLoader.addTemporaryMarkerAtSamePosition();
   }
 
@@ -366,14 +370,22 @@ class _CommunityRouteState extends State<CommunityRoute> {
         ),
         leading: Icon(Icons.add_circle_outline),
         onTap: () {
-          // TODO add global value which keeps last prioryty number
           int last_queue_index = PrefService.getInt('number_of_markers');
+          String groupId = widget._groupLoader.generateId();
+          widget._groupLoader.addGroup(
+              groupId,
+              _formCategoryData['category'],
+              _formCategoryData['range'].toDouble(),
+              PrefService.get('community_icon'),
+              widget._markerLoader.getMarkerActions(id: "temporary"),
+              <String>[]);
           for (int index = 0; index < _placesDescriptions.length; index++) {
             // add placemark method
             String _id = widget._markerLoader.generateId();
             print(_placesDescriptions[index]);
-            addMarkerFromCategory(_placesDescriptions[index], _id, last_queue_index + index + 1);
+            addMarkerFromCategory(_placesDescriptions[index], _id, last_queue_index + index + 1, groupId);
           }
+          widget._groupLoader.printGroup(groupId);
           setState(() {
             if_already_added = true;
           });
@@ -495,7 +507,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                           // add placemark method
                           String _id = widget._markerLoader.generateId();
                           addMarkerFromCategory(
-                              _placesDescriptions[index], _id, PrefService.getInt('number_of_markers') + 1);
+                              _placesDescriptions[index], _id, PrefService.getInt('number_of_markers') + 1, '');
                           // set selected marker
                           PrefService.setString('selected_marker', _id);
                           // Navigate to the profile screen using a named route.
