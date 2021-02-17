@@ -38,9 +38,6 @@ Future<void> main() async {
 
     test("Simple editing markers test", (){
       final markerLoader = MarkerLoader();
-
-      expect(0, markerLoader.getDescriptionsKeys().length);
-
       markerLoader.addMarker(
           id: "test1",
           position: LatLng(-43.0, 170.0),
@@ -52,8 +49,6 @@ Future<void> main() async {
           queue: 1,
           groupId: 'test group'
       );
-
-      expect(1, markerLoader.getDescriptionsKeys().length);
 
       markerLoader.addMarker(
           id: "test1",
