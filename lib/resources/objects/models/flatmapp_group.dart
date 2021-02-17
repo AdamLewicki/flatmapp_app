@@ -45,7 +45,7 @@ class FlatMappGroup{
 
   Map<String, dynamic> toJson() {
     return {
-      'title': this.name,
+      'name': this.name,
       'range': this.range,
       'icon': this.icon,
       'actions': this.actions,

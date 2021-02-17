@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/group_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -12,12 +13,13 @@ async {
   testWidgets('Checking if ProfileRoute wiget can be loaded',
           (WidgetTester tester) async {
         final markerLoader = MarkerLoader();
+        final groupLoader = GroupLoader();
         await tester.pumpWidget(
           MaterialApp(
               routes: {
-                '/about': (context) => ProfileRoute(markerLoader),
+                '/about': (context) => ProfileRoute(markerLoader, groupLoader),
               },
-              home: ProfileRoute(markerLoader)
+              home: ProfileRoute(markerLoader, groupLoader)
           ),
         );
 

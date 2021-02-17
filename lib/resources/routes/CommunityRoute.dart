@@ -168,7 +168,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
       children: <Widget>[
         Tooltip(
           message:
-              LanguagesLoader.of(context).translate("marker range in meters"),
+          LanguagesLoader.of(context).translate("marker range in meters"),
           child: new Text(
             LanguagesLoader.of(context).translate("Range:"),
             style: bodyText(),
@@ -265,7 +265,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                 style: bodyText(),
                 decoration: textFieldStyle(
                     labelTextStr:
-                        LanguagesLoader.of(context).translate("Category name"),
+                    LanguagesLoader.of(context).translate("Category name"),
                     hintTextStr: LanguagesLoader.of(context)
                         .translate("please provide category for search")),
                 onSaved: (String value) {
@@ -295,7 +295,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                 border: Border.all(width: 0.5),
                 borderRadius: BorderRadius.all(
                     Radius.circular(10.0) //         <--- border radius here
-                    ),
+                ),
               ), //
               child: ListTile(
                   title: Text(LanguagesLoader.of(context).translate("Search"),
@@ -361,7 +361,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
         border: Border.all(width: 0.5),
         borderRadius: BorderRadius.all(
             Radius.circular(10.0) //         <--- border radius here
-            ),
+        ),
       ), //       <--- BoxDecoration here
       child: ListTile(
         title: Text(
@@ -403,7 +403,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
         border: Border.all(width: 0.5),
         borderRadius: BorderRadius.all(
             Radius.circular(10.0) //         <--- border radius here
-            ),
+        ),
       ), //       <--- BoxDecoration here
       child: ListTile(
         title: Text(
@@ -440,7 +440,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                     padding: EdgeInsets.all(0.0),
                     child: Image.asset(
                         widget._markerLoader.iconsLoader.markerImageLocal[
-                            PrefService.getString('community_icon')])))),
+                        PrefService.getString('community_icon')])))),
       ),
     );
   }
@@ -465,7 +465,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
 //                    ),
 //                  ),
                 title:
-                    Text(_placesDescriptions[index]['name'], style: bodyText()),
+                Text(_placesDescriptions[index]['name'], style: bodyText()),
                 subtitle: Text(_placesDescriptions[index]['address'],
                     style: footer()),
                 trailing: Icon(Icons.keyboard_arrow_down),
@@ -502,7 +502,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                       IconButton(
                         icon: Icon(Icons.add),
                         tooltip:
-                            LanguagesLoader.of(context).translate("add_marker"),
+                        LanguagesLoader.of(context).translate("add_marker"),
                         onPressed: () {
                           // add placemark method
                           String _id = widget._markerLoader.generateId();
@@ -532,7 +532,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
   }
 
   Widget _markerAddForm(context) {
-    ActionsList _actionsList = ActionsList(widget._markerLoader);
+    ActionsList _actionsList = ActionsList(widget._markerLoader, widget._groupLoader);
     return Form(
         key: _formKey2,
         child: Column(
@@ -551,7 +551,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                           ? Colors.white
                           : Colors.black,
                       tooltip:
-                          LanguagesLoader.of(context).translate("Close form"),
+                      LanguagesLoader.of(context).translate("Close form"),
                       onPressed: () {
                         setState(() {
                           _closePanel(context);
@@ -580,9 +580,9 @@ class _CommunityRouteState extends State<CommunityRoute> {
                 child: new Container(
                     margin: const EdgeInsets.only(left: 10.0, right: 20.0),
                     child: Divider(
-                        // color: Colors.black,
-                        // height: 36,
-                        )),
+                      // color: Colors.black,
+                      // height: 36,
+                    )),
               ),
               Text(LanguagesLoader.of(context).translate("Actions List"),
                   style: bodyText()),
@@ -592,7 +592,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                     child: Divider(
 //                    color: Colors.black,
 //                    height: 36,
-                        )),
+                    )),
               ),
             ]),
             _actionsList.buildActionsList(context, "temporary"),
@@ -621,117 +621,117 @@ class _CommunityRouteState extends State<CommunityRoute> {
     );
 
     return GestureDetector(
-        onTap: (){
-      FocusScope.of(context).requestFocus(new FocusNode());
-    },
-    child: Scaffold(
-      appBar: appBar(),
-      body:
-          // BODY
-          PrefService.getString('token') == ''
-              ? textInfo(
-                  LanguagesLoader.of(context).translate("You need to log") ??
-                      '')
-              : Stack(
-                  fit: StackFit.expand,
-                  children: <Widget>[
-                    SlidingUpPanel(
-                      color: _preset == 'dark' ? Colors.black : Colors.white,
-                      minHeight: 0,
-                      padding: EdgeInsets.only(
-                        left: 30,
-                        right: 30,
+      onTap: (){
+        FocusScope.of(context).requestFocus(new FocusNode());
+      },
+      child: Scaffold(
+        appBar: appBar(),
+        body:
+        // BODY
+        PrefService.getString('token') == ''
+            ? textInfo(
+            LanguagesLoader.of(context).translate("You need to log") ??
+                '')
+            : Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            SlidingUpPanel(
+              color: _preset == 'dark' ? Colors.black : Colors.white,
+              minHeight: 0,
+              padding: EdgeInsets.only(
+                left: 30,
+                right: 30,
+              ),
+              borderRadius: radius,
+              isDraggable: false,
+              defaultPanelState: PanelState.CLOSED,
+              controller: _slidingFormController,
+              panel: _markerAddForm(context),
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                        title: Text(
+                          LanguagesLoader.of(context)
+                              .translate("Community"),
+                          style: header(),
+                        ),
+                        leading: Icon(Icons.language),
                       ),
-                      borderRadius: radius,
-                      isDraggable: false,
-                      defaultPanelState: PanelState.CLOSED,
-                      controller: _slidingFormController,
-                      panel: _markerAddForm(context),
-                      body: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              ListTile(
-                                title: Text(
-                                  LanguagesLoader.of(context)
-                                      .translate("Community"),
-                                  style: header(),
-                                ),
-                                leading: Icon(Icons.language),
-                              ),
-                              ListTile(
-                                title: Text(
-                                  LanguagesLoader.of(context)
-                                      .translate("community_descrtiption_1"),
-                                  style: bodyText(),
-                                ),
-                              ),
-
-                              // SizedBox(height: 10),
-                              // _buildApproximatedCheckboxField(),
-
-                              SizedBox(height: 10),
-
-                              // dropdown list
-                              _buildCategoryTextFieldAndButton(),
-
-                              _placesDescriptions.length != 0 &&
-                                      !if_already_added
-                                  ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: addAllPlaces(context),
-                                        ),
-                                        Expanded(
-                                          child: openDefaultMarkerForm(context),
-                                        ),
-                                        // SizedBox(
-                                        //     width: 100,
-                                        //     child: _iconChangeButton()
-                                        // ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-
-                              // places cards list
-                              SizedBox(
-                                height: 400, // fixed height
-                                child: _listPlaces(context),
-                              ),
-
-                              // Container(
-                              //   child: SingleChildScrollView(
-                              //     child: Column(
-                              //       children: [
-                              //         _listPlaces(context)
-                              //       ],
-                              //     ),
-                              //   ),
-                              // )
-
-                              // Row(
-                              //   children: <Widget>[
-                              //     Flexible(child: _listPlaces(context),),
-                              //     // more widgets
-                              //   ],
-                              // ),
-                            ],
-                          ),
+                      ListTile(
+                        title: Text(
+                          LanguagesLoader.of(context)
+                              .translate("community_descrtiption_1"),
+                          style: bodyText(),
                         ),
                       ),
-                    ),
-                  ],
-                ),
 
-      // SIDE PANEL MENU
-      drawer: sideBarMenu(context),
-    ),
+                      // SizedBox(height: 10),
+                      // _buildApproximatedCheckboxField(),
+
+                      SizedBox(height: 10),
+
+                      // dropdown list
+                      _buildCategoryTextFieldAndButton(),
+
+                      _placesDescriptions.length != 0 &&
+                          !if_already_added
+                          ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            child: addAllPlaces(context),
+                          ),
+                          Expanded(
+                            child: openDefaultMarkerForm(context),
+                          ),
+                          // SizedBox(
+                          //     width: 100,
+                          //     child: _iconChangeButton()
+                          // ),
+                        ],
+                      )
+                          : SizedBox.shrink(),
+
+                      // places cards list
+                      SizedBox(
+                        height: 400, // fixed height
+                        child: _listPlaces(context),
+                      ),
+
+                      // Container(
+                      //   child: SingleChildScrollView(
+                      //     child: Column(
+                      //       children: [
+                      //         _listPlaces(context)
+                      //       ],
+                      //     ),
+                      //   ),
+                      // )
+
+                      // Row(
+                      //   children: <Widget>[
+                      //     Flexible(child: _listPlaces(context),),
+                      //     // more widgets
+                      //   ],
+                      // ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        // SIDE PANEL MENU
+        drawer: sideBarMenu(context),
+      ),
     );
   }
 }

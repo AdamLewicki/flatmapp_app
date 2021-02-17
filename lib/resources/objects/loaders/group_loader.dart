@@ -124,16 +124,46 @@ class GroupLoader {
   // deletes group and all markers assigned to it
   void deleteGroupWithMarkers(String groupId)
   {
-    _groups[groupId].markers.forEach((element) {
-      markerLoader.removeMarker(id: element);
+    _groups[groupId].markers.forEach((markerId) {
+      markerLoader.removeMarker(id: markerId);
     });
     deleteGroup(groupId);
   }
 
-  // clears group from assigned markers
+  // clears group from assigned markers and deletes them completely
+  void removeAllMarkersAtGroup(String groupId)
+  {
+    _groups[groupId].markers.forEach((marker) {
+      markerLoader.removeMarker(id: marker);
+    });
+    _groups[groupId].markers.clear();
+    saveGroups();
+  }
+
+  // clears group from assigned markers but not form application
   void removeAllMarkersFromGroup(String groupId)
   {
+    _groups[groupId].markers.forEach((marker) {
+      markerLoader.getMarkerDescription(marker).groupId = '';
+    });
+    markerLoader.saveMarkers();
     _groups[groupId].markers.clear();
+    saveGroups();
+  }
+
+  // removes marker from group but doesn't delete it overall
+  void removeMarkerFromGroup(String groupId, String markerId)
+  {
+    _groups[groupId].markers.remove(markerId);
+    markerLoader.getMarkerDescription(markerId).groupId = '';
+    saveGroups();
+  }
+
+  // clears all groups of markers
+  void clearAllGroupsOfMarkers(){
+    _groups.forEach((groupId, group) {
+      group.markers.clear();
+    });
     saveGroups();
   }
 
@@ -142,79 +172,92 @@ class GroupLoader {
   {
     if(!_groups[groupId].markers.contains(markerId))
       _groups[groupId].markers.add(markerId);
-    FlatMappMarker marker = markerLoader.getMarkerDescription(markerId);
-    markerLoader.addMarker(
-        id: markerId,
-        position: LatLng(marker.position_x, marker.position_y),
-        icon: _groups[groupId].icon,
-        title: marker.title,
-        description: marker.description,
-        range: _groups[groupId].range,
-        actions: _groups[groupId].actions,
-        queue: marker.queue,
-        groupId: groupId
-    );
     saveGroups();
   }
 
-  // removes marker from group but doesn't delete it overall
-  void removeMarkerFromGroup(String groupId, String markerId)
-  {
-    _groups[groupId].markers.remove(markerId);
-    saveGroups();
-  }
-
-  // initiates action list with a single action in given group and
-  // updates markers assigned to it
-  void setGroupActionSingle(
-      {String groupId,
-        int action_position,
-        Map<String, dynamic> action_parameters}) {
-    _groups[groupId].actions[action_position].parameters =
-        action_parameters;
-
-    _groups[groupId].markers.forEach((element) {
-      addMarkerToGroup(groupId, element);
+  // use group values for every marker assigned to this group
+  void updateMarkers(String groupId){
+    _groups[groupId].markers.forEach((markerId) {
+      FlatMappMarker marker = markerLoader.getMarkerDescription(markerId);
+      markerLoader.addMarker(
+          id: markerId,
+          position: LatLng(marker.position_x, marker.position_y),
+          icon: _groups[groupId].icon,
+          title: marker.title,
+          description: marker.description,
+          range: _groups[groupId].range,
+          actions: _groups[groupId].actions,
+          queue: marker.queue,
+          groupId: groupId
+      );
     });
-  }
-
-  // adds action to action List in given group and updates markers
-  // assigned to it
-  void addGroupAction({String groupId, FlatMappAction action}) {
-    if (_groups[groupId].actions == null) {
-      _groups[groupId].actions = [];
-    }
-
-    // update action position
-    action.action_position =
-        (_groups[groupId].actions.length + 1).toDouble();
-    _groups[groupId].actions.add(action);
-    if(updateState!=null)
-      updateState(); //We can pass more then 1 parameter
-
-    _groups[groupId].markers.forEach((element) {
-      addMarkerToGroup(groupId, element);
-    });
-  }
-
-  // removes action from action List in given group and updates markers
-  // assigned to it
-  void removeGroupAction({String groupId, int index}) {
-    if (_groups[groupId].actions[index] != null) {
-      _groups[groupId].actions.removeAt(index);
-      _groups[groupId].markers.forEach((element) {
-        addMarkerToGroup(groupId, element);
-      });
-    } else {
-      print("no action to remove at index $index from group $groupId");
-    }
   }
 
   void removeAllGroups(){
     _groups.clear();
+    saveGroups();
+  }
+
+  List<String> getGroupsIds(){
+    return _groups.keys.toList();
+  }
+
+  FlatMappGroup getGroup(String groupId){
+    return _groups[groupId];
+  }
+
+  List<FlatMappAction> getGroupActions(String groupId){
+    return _groups[groupId].actions;
+  }
+
+  Map<String, FlatMappGroup> getGroupsMap(){
+    return _groups;
+  }
+
+  String getGroupNameByMarker(String markerId)
+  {
+    String groupId = markerLoader.getMarkerDescription(markerId).groupId;
+    if(groupId != '' && _groups.containsKey(groupId))
+    {
+      return _groups[groupId].name;
+    }
+    return '';
+  }
+
+  List<String> getGroupMarkers(String groupId){
+    return _groups[groupId].markers;
+  }
+
+  List<FlatMappMarker> getGroupFlatMappMarkers(String groupId){
+    List<FlatMappMarker> markers = [];
+    _groups[groupId].markers.forEach((marker) {
+      markers.add(markerLoader.getMarkerDescription(marker));
+    });
+    return markers;
+  }
+
+  int getNumberOfMarkersInGroup(String groupId)
+  {
+    return _groups[groupId].markers.length;
   }
 
   void printGroup(String groupId){
     print(_groups[groupId].toString());
+  }
+
+  void setGroupName(String groupId, String name){
+    _groups[groupId].name = name;
+  }
+
+  void setGroupRange(String groupId, double range){
+    _groups[groupId].range = range;
+  }
+
+  void setGroupIcon(String groupId, String icon){
+    _groups[groupId].icon = icon;
+  }
+
+  void setGroupActions(String groupId, List<FlatMappAction> actions){
+    _groups[groupId].actions = actions;
   }
 }

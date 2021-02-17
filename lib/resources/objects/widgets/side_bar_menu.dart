@@ -73,6 +73,8 @@ Drawer sideBarMenu(context) {
         sideBarMenuElement(context, 'Map', Icon(Icons.location_on), '/map'),
         sideBarMenuElement(
             context, 'Markers', Icon(Icons.bookmark_border), '/markers'),
+        sideBarMenuElement(
+            context, 'Groups', Icon(Icons.format_list_bulleted), '/groups'),
         sideBarMenuElementLogin(
             context, 'Profile', Icon(Icons.account_circle), '/profile'),
         sideBarMenuElementLogin(
@@ -83,9 +85,9 @@ Drawer sideBarMenu(context) {
             context, 'About', Icon(Icons.info_outline), '/about'),
         PrefService.getString('token') == ''
             ? sideBarMenuElement(context, 'Log In',
-                Icon(Icons.subdirectory_arrow_right), '/login')
+            Icon(Icons.subdirectory_arrow_right), '/login')
             : sideBarMenuElement(context, 'Log out',
-                Icon(Icons.subdirectory_arrow_right), '/login'),
+            Icon(Icons.subdirectory_arrow_right), '/login'),
       ],
     ),
   );

@@ -66,8 +66,8 @@ class NetLoader {
           HttpHeaders.authorizationHeader: "Token $_token",
         },
         body: json.encode(content)
-        // body:
-        );
+      // body:
+    );
     // verify response
     analyseResponse(_response);
     return _response;
@@ -152,11 +152,12 @@ class NetLoader {
   }
 
   Future<void> postBackup(
-      BuildContext context, MarkerLoader markerLoader) async {
+      BuildContext context, MarkerLoader markerLoader, GroupLoader groupLoader) async {
     bool connected = await checkNetworkConnection();
     if (connected) {
       try {
         List<Map<String, dynamic>> parsedMarkers = [];
+        List<Map<String, dynamic>> parsedGroups = [];
 
         // parse markers to form acceptable in server interface
         markerLoader.getMarkersDescriptions().forEach((key, value) {
@@ -184,11 +185,28 @@ class NetLoader {
           }
         });
 
+        groupLoader.getGroupsMap().forEach((key, value) {
+          parsedGroups.add({
+            "Action_Name": value.actions,
+            "_range": value.range,
+            "Group_Id": key,
+            "name": value.name,
+            "icon": value.icon,
+          });
+        });
+
         // send parsed markers
         await _postToServer(
           endpoint: "/api/backup/",
           content: parsedMarkers,
         );
+
+        print(json.encode(parsedGroups));
+
+//        await _postToServer(
+//          endpoint: "/api/backup/",
+//          content: parsedGroups,
+//        );
 
         showToast("Backup uploaded successfully");
       } on SocketException catch (e) {
@@ -256,34 +274,30 @@ class NetLoader {
               actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
               groupId: marker['groupId'],
             );
-            int number_of_markers = PrefService.getInt('number_of_markers');
-            PrefService.setInt('number_of_markers', number_of_markers + 1);
           });
-
-          markerLoader.addTemporaryMarkerAtSamePosition();
-
           // save backup to file
           markerLoader.saveMarkers();
-          if (parsedGroups.isNotEmpty) {
+          if (parsedGroups.isNotEmpty){
             parsedGroups.forEach((group) {
               groupLoader.addGroup(
-                  group["id"],
+                  group["Group_id"],
                   group["name"].toString(),
-                  group["range"],
+                  group["_range"],
                   group["icon"].toString(),
                   toActionsList(List<dynamic>.from(group['Action_Name'])),
                   <String>[]
               );
             });
             markerLoader.getMarkersDescriptions().forEach((markerId, marker) {
-              if (marker.groupId != '') {
+              if(marker.groupId != '')
+              {
                 groupLoader.addMarkerToGroup(marker.groupId, markerId);
               }
             });
 
 
           }
-            showToast("Backup downloaded successfully");
+          showToast("Backup downloaded successfully");
         }
       } on SocketException catch (e) {
         print(e);
@@ -385,8 +399,8 @@ class NetLoader {
               HttpHeaders.authorizationHeader: "Token $_token",
             },
             body: json.encode(content)
-            // body:
-            );
+          // body:
+        );
         // verify response
         analyseResponse(_response);
 
@@ -437,7 +451,7 @@ class NetLoader {
     // https://dev.to/carminezacc/advanced-flutter-networking-part-1-uploading-a-file-to-a-rest-api-from-flutter-using-a-multi-part-form-data-post-request-2ekm
     // init request
     var request =
-        new http.MultipartRequest("POST", Uri.parse(_serverURL + endpoint));
+    new http.MultipartRequest("POST", Uri.parse(_serverURL + endpoint));
 
     // add file to request
     http.MultipartFile.fromPath('backup', filepath).then((file) {
@@ -461,7 +475,7 @@ class NetLoader {
     HttpClient httpClient = new HttpClient()
       ..connectionTimeout = const Duration(seconds: 10)
       ..badCertificateCallback =
-          ((X509Certificate cert, String host, int port) => true);
+      ((X509Certificate cert, String host, int port) => true);
     return httpClient;
   }
 
@@ -487,7 +501,7 @@ class NetLoader {
     Completer completer = new Completer<String>();
 
     httpResponse.listen(
-      (data) {
+          (data) {
         byteCount += data.length;
         raf.writeFromSync(data);
       },

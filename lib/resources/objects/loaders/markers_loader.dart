@@ -21,8 +21,8 @@ class MarkerLoader {
 
   // google maps markers set
   Map<String, Marker> googleMarkers = <String, Marker>{};
-   VoidCallback called;
-   VoidCallback updatestate;
+  VoidCallback called;
+  VoidCallback updatestate;
 
   // zones set
   Map<String, Circle> zones = <String, Circle>{};
@@ -103,7 +103,7 @@ class MarkerLoader {
         // removeAllMarkers();
 
         Map<String, dynamic> jsonObj =
-            Map<String, dynamic>.from(json.decode(markerStorage));
+        Map<String, dynamic>.from(json.decode(markerStorage));
 
         if (jsonObj.isNotEmpty) {
           jsonObj.forEach((key, dynamic value) {
@@ -138,13 +138,13 @@ class MarkerLoader {
 
       // add marker
       addMarker(
-        id: id,
-        position: position,
-        icon: markerData.icon,
-        title: markerData.title,
-        description: markerData.description,
-        range: markerData.range,
-        actions: markerData.actions,
+          id: id,
+          position: position,
+          icon: markerData.icon,
+          title: markerData.title,
+          description: markerData.description,
+          range: markerData.range,
+          actions: markerData.actions,
           queue: markerData.queue,
           groupId: markerData.groupId
       );
@@ -172,11 +172,11 @@ class MarkerLoader {
   // add or edit marker
   void addMarker(
       {String id,
-      LatLng position,
-      String icon,
-      String title,
-      String description,
-      double range,
+        LatLng position,
+        String icon,
+        String title,
+        String description,
+        double range,
         List<FlatMappAction> actions,
         int queue,
         String groupId,
@@ -209,7 +209,7 @@ class MarkerLoader {
 //          }),
           infoWindow: InfoWindow(
             title: title,
-            snippet: description,
+            snippet: queue.toString(),
           ));
       // add zone
       zones[id] = Circle(
@@ -295,6 +295,21 @@ class MarkerLoader {
     );
   }
 
+  void addTemporaryMarkerWithCustomActions(List<FlatMappAction> actions) {
+    addMarker(
+      id: "temporary",
+      position: LatLng(_markersDescriptions['temporary'].position_x,
+          _markersDescriptions['temporary'].position_y),
+      icon: 'default',
+      title: "",
+      description: "",
+      range: 12,
+      actions: actions,
+      queue: PrefService.getInt('number_of_markers') + 1,
+      groupId: '',
+    );
+  }
+
   FlatMappMarker getMarkerDescription(String id) {
     return _markersDescriptions[id];
   }
@@ -326,8 +341,8 @@ class MarkerLoader {
 
   void setMarkerActionSingle(
       {String marker_id,
-      int action_position,
-      Map<String, dynamic> action_parameters}) {
+        int action_position,
+        Map<String, dynamic> action_parameters}) {
     _markersDescriptions[marker_id].actions[action_position].parameters =
         action_parameters;
   }

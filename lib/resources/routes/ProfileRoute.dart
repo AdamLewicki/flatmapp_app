@@ -39,9 +39,9 @@ class _ProfileRouteState extends State<ProfileRoute> {
       builder: (BuildContext context) {
         return AlertDialog(
             title:
-                Text(LanguagesLoader.of(context).translate("Remove marker?")),
+            Text(LanguagesLoader.of(context).translate("Remove marker?")),
             content: Text(LanguagesLoader.of(context)
-                    .translate("You are about to remove marker") +
+                .translate("You are about to remove marker") +
                 "\n"
                     "${_marker.title}\n"
                     "${_marker.description}."),
@@ -58,7 +58,12 @@ class _ProfileRouteState extends State<ProfileRoute> {
                 child: Text(LanguagesLoader.of(context).translate("Yes")),
                 onPressed: () {
                   // remove marker
-                  widget._markerLoader.removeMarker(id: id);
+                  if(_marker.groupId == '')
+                    widget._markerLoader.removeMarker(id: id);
+                  else{
+                    widget._groupLoader.removeMarkerFromGroup(_marker.groupId, id);
+                    widget._markerLoader.removeMarker(id: id);
+                  }
                   // save markers state to file
                   widget._markerLoader.saveMarkers();
                   // dismiss alert
@@ -79,93 +84,94 @@ class _ProfileRouteState extends State<ProfileRoute> {
 //    Expanded(
 //      child: ,
 //    ),
-        Column(
-            children: <Widget>[
-              ListTile(
-                title: Text(LanguagesLoader.of(context).translate("Profile"),
-                    style: header()),
-                leading: Icon(Icons.account_circle),
+    Column(
+      children: <Widget>[
+        ListTile(
+          title: Text(LanguagesLoader.of(context).translate("Profile"),
+              style: header()),
+          leading: Icon(Icons.account_circle),
+        ),
+        Tooltip(
+          message:
+          LanguagesLoader.of(context).translate("Change username"),
+          child: ListTile(
+            title: Text(
+              LanguagesLoader.of(context).translate("Username") +
+                  ': ' +
+                  PrefService.getString("login"),
+              style: bodyText(),
+            ),
+            leading: Icon(Icons.laptop),
+            onTap: () {
+              // TODO move to change form
+            },
+          ),
+        ),
+        ListTile(
+          title: Text(
+            LanguagesLoader.of(context)
+                .translate("Back up your markers to server"),
+            style: bodyText(),
+          ),
+          trailing: Icon(Icons.backup),
+          onTap: () {
+            _netLoader.postBackup(context, widget._markerLoader,
+                widget._groupLoader);
+          },
+        ),
+        ListTile(
+          title: Text(
+            LanguagesLoader.of(context)
+                .translate("Get your markers from Backup"),
+            style: bodyText(),
+          ),
+          trailing: Icon(Icons.file_download),
+          onTap: () {
+            _netLoader.getBackup(context, widget._markerLoader, widget._groupLoader);
+          },
+        ),
+        ExpansionTile(
+          leading: Icon(Icons.laptop),
+          title: Text(
+              LanguagesLoader.of(context).translate("Change user data"),
+              style: bodyText()),
+          trailing: Icon(Icons.keyboard_arrow_down),
+          children: <Widget>[
+            ListTile(
+              title: Text(
+                LanguagesLoader.of(context).translate("Change password"),
+                style: bodyText(),
               ),
-              Tooltip(
-                message:
-                    LanguagesLoader.of(context).translate("Change username"),
-                child: ListTile(
-                  title: Text(
-                    LanguagesLoader.of(context).translate("Username") +
-                        ': ' +
-                        PrefService.getString("login"),
-                    style: bodyText(),
-                  ),
-                  leading: Icon(Icons.laptop),
-                  onTap: () {
-                    // TODO move to change form
-                  },
-                ),
+              // leading: Icon(Icons.keyboard_arrow_right),
+              trailing: Icon(Icons.compare_arrows),
+              onTap: () {
+                // move to change form
+                Navigator.pushNamed(context, '/change_password');
+              },
+            ),
+            ListTile(
+              title: Text(
+                LanguagesLoader.of(context)
+                    .translate("Erase account from system"),
+                style: bodyText(),
               ),
-              ListTile(
-                title: Text(
-                  LanguagesLoader.of(context)
-                      .translate("Back up your markers to server"),
-                  style: bodyText(),
-                ),
-                trailing: Icon(Icons.backup),
-                onTap: () {
-                  _netLoader.postBackup(context, widget._markerLoader);
-                },
-              ),
-              ListTile(
-                title: Text(
-                  LanguagesLoader.of(context)
-                      .translate("Get your markers from Backup"),
-                  style: bodyText(),
-                ),
-                trailing: Icon(Icons.file_download),
-                onTap: () {
-                  _netLoader.getBackup(context, widget._markerLoader, widget._groupLoader);
-                },
-              ),
-              ExpansionTile(
-                leading: Icon(Icons.laptop),
-                title: Text(
-                    LanguagesLoader.of(context).translate("Change user data"),
-                    style: bodyText()),
-                trailing: Icon(Icons.keyboard_arrow_down),
-                children: <Widget>[
-                  ListTile(
-                    title: Text(
-                      LanguagesLoader.of(context).translate("Change password"),
-                      style: bodyText(),
-                    ),
-                    // leading: Icon(Icons.keyboard_arrow_right),
-                    trailing: Icon(Icons.compare_arrows),
-                    onTap: () {
-                      // move to change form
-                      Navigator.pushNamed(context, '/change_password');
-                    },
-                  ),
-                  ListTile(
-                    title: Text(
-                      LanguagesLoader.of(context)
-                          .translate("Erase account from system"),
-                      style: bodyText(),
-                    ),
-                    trailing: Icon(Icons.remove_circle),
-                    leading: Icon(Icons.remove_circle),
-                    onTap: () {
-                      // move to account removal form
-                      Navigator.pushNamed(context, '/erase_account');
-                    },
-                  ),
-                ],
-              ),
-              ListTile(
-                title: Text(
-                  LanguagesLoader.of(context).translate("flatmapp_footer"),
-                  style: footer(),
-                ),
-              ),
-            ],
-          );
+              trailing: Icon(Icons.remove_circle),
+              leading: Icon(Icons.remove_circle),
+              onTap: () {
+                // move to account removal form
+                Navigator.pushNamed(context, '/erase_account');
+              },
+            ),
+          ],
+        ),
+        ListTile(
+          title: Text(
+            LanguagesLoader.of(context).translate("flatmapp_footer"),
+            style: footer(),
+          ),
+        ),
+      ],
+    );
   }
 
   @override

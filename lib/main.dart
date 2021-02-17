@@ -9,7 +9,10 @@ import 'package:flatmapp/resources/routes/ActionsRoute.dart';
 import 'package:flatmapp/resources/routes/ChangePasswordRoute.dart';
 import 'package:flatmapp/resources/routes/CommunityIconsRoute.dart';
 import 'package:flatmapp/resources/routes/CommunityRoute.dart';
+import 'package:flatmapp/resources/routes/EditGroupRoute.dart';
 import 'package:flatmapp/resources/routes/EraseAccountRoute.dart';
+import 'package:flatmapp/resources/routes/GroupMarkersRoute.dart';
+import 'package:flatmapp/resources/routes/GroupsRoute.dart';
 import 'package:flatmapp/resources/routes/IconsRoute.dart';
 import 'package:flatmapp/resources/routes/LogInRoute.dart';
 import 'package:flatmapp/resources/routes/MapRoute.dart';
@@ -129,7 +132,6 @@ main() async {
   await _markerLoader.loadMarkers();
   await _groupLoader.loadGroups();
 
-
 //  // check location permission
 //  if (!(await Permission.location.request().isGranted)) {
 //    // request access to location
@@ -186,7 +188,7 @@ class _MyAppState extends State<MyApp> {
     return new DynamicTheme(
         defaultBrightness: Brightness.light,
         data: (brightness) =>
-            new ThemeData(brightness: brightness, accentColor: Colors.green),
+        new ThemeData(brightness: brightness, accentColor: Colors.green),
         themedWidgetBuilder: (context, theme) {
           return MaterialApp(
             title: 'FlatMApp',
@@ -196,7 +198,7 @@ class _MyAppState extends State<MyApp> {
             locale: _locale,
             routes: {
               // When navigating to the "/name" route, build the NameRoute widget.
-              '/map': (context) => MapRoute(_markerLoader),
+              '/map': (context) => MapRoute(_markerLoader, _groupLoader),
               '/profile': (context) => ProfileRoute(_markerLoader, _groupLoader),
               '/community': (context) => CommunityRoute(_markerLoader, _groupLoader),
               '/settings': (context) => SettingsRoute(),
@@ -210,8 +212,10 @@ class _MyAppState extends State<MyApp> {
               '/register': (context) => RegisterRoute(),
               '/action_parameters': (context) =>
                   ActionParametersRoute(_markerLoader),
-              '/markers': (context) => MarkersRoute(_markerLoader),
-
+              '/markers': (context) => MarkersRoute(_markerLoader, _groupLoader),
+              '/groups': (context) => GroupsRoute(_groupLoader, _markerLoader),
+              '/edit_group': (context) => EditGroupRoute(_markerLoader, _groupLoader),
+              '/group_markers': (context) => GroupMarkersRoute(_markerLoader, _groupLoader),
             },
             // TODO add all languages available here
             supportedLocales: [

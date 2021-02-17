@@ -4,26 +4,25 @@ import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.da
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
-import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
 
 // ignore: must_be_immutable
-class MarkersRoute extends StatefulWidget {
+class GroupMarkersRoute extends StatefulWidget {
   // data loader
   MarkerLoader _markerLoader = MarkerLoader();
   GroupLoader _groupLoader = GroupLoader();
 
-  MarkersRoute(this._markerLoader, this._groupLoader, {Key key}) : super(key: key);
+  GroupMarkersRoute(this._markerLoader, this._groupLoader, {Key key}) : super(key: key);
 
   @override
-  _MarkersRouteState createState() => _MarkersRouteState();
+  _GroupMarkersRouteState createState() => _GroupMarkersRouteState();
 }
 
 // Putting language dictionaries seams done
 
-class _MarkersRouteState extends State<MarkersRoute> {
+class _GroupMarkersRouteState extends State<GroupMarkersRoute> {
   IconsLoader _iconsLoader = IconsLoader();
 
   @override
@@ -81,7 +80,87 @@ class _MarkersRouteState extends State<MarkersRoute> {
     );
   }
 
-  Future<void> _raiseAlertDialogRemoveAllMarkers(BuildContext context) async {
+  Future<void> raiseAlertDialogRemoveMarkerFromGroup(String id) async {
+    FlatMappMarker _marker = widget._markerLoader.getMarkerDescription(id);
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Text(
+              LanguagesLoader.of(context).translate("Remove marker?"),
+            ),
+            content: Text(LanguagesLoader.of(context)
+                .translate("You are about to remove marker from group") +
+                "\n"
+                    "${_marker.title}\n"
+                    "${_marker.description}"),
+            actions: [
+              // set up the buttons
+              FlatButton(
+                child: Text(LanguagesLoader.of(context).translate("No")),
+                onPressed: () {
+                  // dismiss alert
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text(LanguagesLoader.of(context).translate("Yes")),
+                onPressed: () {
+                  // remove marker
+                  widget._groupLoader.removeMarkerFromGroup(_marker.groupId, id);
+                  // save markers state to file
+                  widget._markerLoader.saveMarkers();
+                  // dismiss alert
+                  Navigator.of(context).pop();
+                  // refresh cards
+                  setState(() {});
+                },
+              ),
+            ]);
+      },
+    );
+  }
+
+  Future<void> _raiseAlertDialogRemoveAllMarkersFromGroup(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Text(
+                LanguagesLoader.of(context).translate("Remove ALL markers?")),
+            content: Text(LanguagesLoader.of(context).translate(
+                "You are about to remove all markers from group")),
+            actions: [
+              // set up the buttons
+              FlatButton(
+                child: Text(LanguagesLoader.of(context).translate("No")),
+                onPressed: () {
+                  // dismiss alert
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text(LanguagesLoader.of(context)
+                    .translate("Remove all markers")),
+                onPressed: () {
+                  // remove all markers
+                  setState(() {
+                    widget._groupLoader.removeAllMarkersFromGroup(PrefService
+                        .getString('selected_group'));
+                  });
+                  // dismiss alert
+                  Navigator.of(context).pop();
+                },
+              ),
+            ]);
+      },
+    );
+  }
+
+  Future<void> _raiseAlertDialogRemoveAllMarkersAtGroup(BuildContext context) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -106,8 +185,8 @@ class _MarkersRouteState extends State<MarkersRoute> {
                 onPressed: () {
                   // remove all markers
                   setState(() {
-                    widget._markerLoader.removeAllMarkers();
-                    widget._groupLoader.clearAllGroupsOfMarkers();
+                    widget._groupLoader.removeAllMarkersAtGroup(PrefService
+                        .getString('selected_group'));
                   });
                   // dismiss alert
                   Navigator.of(context).pop();
@@ -131,39 +210,31 @@ class _MarkersRouteState extends State<MarkersRoute> {
           children: <Widget>[
             Expanded(
               child: ListTile(
-                title: Text(
-                    LanguagesLoader.of(context).translate("Active markers:") +
-                        ' #' +
-                        (widget._markerLoader.getDescriptionsKeys().length - 1 >
-                            0
-                            ? '${widget._markerLoader.getDescriptionsKeys().length - 1}'
-                            : '0'),
+                title: Text(LanguagesLoader.of(context).translate("Group markers:") +
+                    ' #' + widget._groupLoader.getNumberOfMarkersInGroup(
+                    PrefService.getString('selected_group')).toString(),
                     style: bodyText()),
                 leading: Icon(Icons.bookmark_border),
               ),
             ),
-            Expanded(
-              child: Container(
-                decoration: buttonFieldStyle(),
-                child: Tooltip(
-                  message: LanguagesLoader.of(context)
-                      .translate("Remove all markers"),
-                  child: ListTile(
-                    title: Text(
-                        LanguagesLoader.of(context).translate("Remove all"),
-                        style: bodyText()),
-                    trailing: Icon(Icons.delete_forever),
-                    onTap: () {
-                      // remove all markers with alert dialog
-                      _raiseAlertDialogRemoveAllMarkers(context);
-                    },
-                  ),
-                ),
-              ),
+            IconButton(
+              icon: Icon(Icons.delete),
+              tooltip: LanguagesLoader.of(context)
+                  .translate("Remove markers from group"),
+              onPressed: () {
+                _raiseAlertDialogRemoveAllMarkersFromGroup(context);
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.delete_forever),
+              tooltip: LanguagesLoader.of(context)
+                  .translate("Remove markers which are in group"),
+              onPressed: () {
+                _raiseAlertDialogRemoveAllMarkersAtGroup(context);
+              },
             ),
           ],
         ),
-
         // list of active markers
         _listMarkers(context),
 
@@ -178,19 +249,21 @@ class _MarkersRouteState extends State<MarkersRoute> {
   }
 
   Widget _listMarkers(BuildContext context) {
-    List<String> _markersDescriptionsKeys =
-    widget._markerLoader.getDescriptionsKeys();
+    List<String> _groupMarkers =
+    widget._groupLoader.getGroupMarkers(
+        PrefService.getString('selected_group')
+    );
 
     // ActionsList _actionsList = ActionsList(widget._markerLoader);
 
-    if (_markersDescriptionsKeys.length > 0) {
+    if (_groupMarkers.length > 0) {
       return Expanded(
         child: ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: _markersDescriptionsKeys.length + 1,
+          itemCount: _groupMarkers.length + 1,
           itemBuilder: (context, index) {
-            if (index == _markersDescriptionsKeys.length) {
+            if (index == _groupMarkers.length) {
               // add last element - card "add marker"
               // return Container( //                           <-- Card widget
               //   child: Opacity(
@@ -212,7 +285,7 @@ class _MarkersRouteState extends State<MarkersRoute> {
               return SizedBox.shrink();
             } else {
               // marker data for card
-              String _id = _markersDescriptionsKeys.elementAt(index);
+              String _id = _groupMarkers.elementAt(index);
               FlatMappMarker _marker =
               widget._markerLoader.getMarkerDescription(_id);
 
@@ -248,6 +321,15 @@ class _MarkersRouteState extends State<MarkersRoute> {
                                 PrefService.setString('selected_marker', _id);
                                 // Navigate to the profile screen using a named route.
                                 Navigator.pushNamed(context, '/map');
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              tooltip: LanguagesLoader.of(context)
+                                  .translate("Remove marker"),
+                              onPressed: () {
+                                // set up the AlertDialog
+                                raiseAlertDialogRemoveMarkerFromGroup(_id);
                               },
                             ),
                             IconButton(
@@ -289,8 +371,6 @@ class _MarkersRouteState extends State<MarkersRoute> {
         padding: const EdgeInsets.all(8.0),
         child: _markersColumn(),
       ),
-      // SIDE PANEL MENU
-      drawer: sideBarMenu(context),
     );
   }
 }
