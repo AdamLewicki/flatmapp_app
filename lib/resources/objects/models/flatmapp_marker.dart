@@ -38,7 +38,7 @@ class FlatMappMarker {
         '"icon": "${this.icon}", '
         '"actions": "${this.actions}", '
         '"queue": "${this.queue}", '
-        '"groupId": "${this.queue}", '
+        '"groupId": "${this.groupId}", '
         '}';
   }
 
