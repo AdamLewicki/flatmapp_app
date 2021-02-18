@@ -264,24 +264,6 @@ class _GroupMarkersRouteState extends State<GroupMarkersRoute> {
           itemCount: _groupMarkers.length + 1,
           itemBuilder: (context, index) {
             if (index == _groupMarkers.length) {
-              // add last element - card "add marker"
-              // return Container( //                           <-- Card widget
-              //   child: Opacity(
-              //     opacity: 0.2,
-              //     child: IconButton(
-              //         icon: Icon(Icons.add_circle_outline, size: 40,),
-              //         color: (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black,
-              //         tooltip: "Add marker",
-              //         onPressed: () {
-              //           // set temporary as selected marker
-              //           PrefService.setString('selected_marker', "temporary");
-              //           // Navigate to the profile screen using a named route.
-              //           Navigator.pushNamed(context, '/map');
-              //         }
-              //     ),
-              //   ),
-              //   alignment: Alignment(0.0, 0.0),
-              // );
               return SizedBox.shrink();
             } else {
               // marker data for card
