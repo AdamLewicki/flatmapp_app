@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
@@ -33,19 +32,6 @@ class GroupLoader {
       return '';
     }
   }
-
-//  Future updateMarkersOnFileChange() async {
-//    String path = await getFilePath();
-//    try {
-//      // check if there was a change in markers
-//      if (File(path).lastModifiedSync().isAfter(_markersLastModification)) {
-//        _markersLastModification = File(path).lastModifiedSync();
-//        this.loadMarkers();
-//      }
-//    } on FileSystemException catch (e) {
-//      print(e);
-//    }
-//  }
 
   void _repairFile(String path) {
     // clear file
