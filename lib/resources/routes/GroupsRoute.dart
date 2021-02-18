@@ -179,7 +179,7 @@ class _GroupsRouteState extends State<GroupsRoute>{
       );
     } else {
       return ListTile(
-        title: Text(LanguagesLoader.of(context).translate("no markers found"),
+        title: Text(LanguagesLoader.of(context).translate("no groups found"),
             style: footer()),
         leading: Icon(Icons.error_outline),
       );
