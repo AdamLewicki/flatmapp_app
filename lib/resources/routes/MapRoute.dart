@@ -554,7 +554,7 @@ class _MapRouteState extends State<MapRoute> {
             groupId: '',
           );
         });
-
+        widget._markerLoader.addTemporaryMarkerAtSamePosition();
         // close form panel
         _closePanel(context);
 
