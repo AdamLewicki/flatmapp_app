@@ -274,6 +274,8 @@ class NetLoader {
               actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
               groupId: marker['groupId'],
             );
+            int number_of_markers = PrefService.getInt('number_of_markers');
+            PrefService.setInt('number_of_markers', number_of_markers + 1);
           });
           // save backup to file
           markerLoader.saveMarkers();
