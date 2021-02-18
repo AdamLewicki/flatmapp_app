@@ -179,6 +179,7 @@ class NetLoader {
               "icon": value.icon,
               "description": value.description,
               "queue": value.queue,
+              "groupID": value.groupId,
               // TODO determine what action_detail means
               // "action_detail": "none",
             });
@@ -189,7 +190,7 @@ class NetLoader {
           parsedGroups.add({
             "Action_Name": value.actions,
             "_range": value.range,
-            "Group_Id": key,
+            "groupID": key,
             "name": value.name,
             "icon": value.icon,
           });
@@ -197,16 +198,14 @@ class NetLoader {
 
         // send parsed markers
         await _postToServer(
-          endpoint: "/api/backup/",
+          endpoint: "/api/backup/pointer/",
           content: parsedMarkers,
         );
 
-        print(json.encode(parsedGroups));
-
-//        await _postToServer(
-//          endpoint: "/api/backup/",
-//          content: parsedGroups,
-//        );
+        await _postToServer(
+          endpoint: "/api/backup/group/",
+          content: parsedGroups,
+        );
 
         showToast("Backup uploaded successfully");
       } on SocketException catch (e) {
@@ -245,11 +244,11 @@ class NetLoader {
     if (connected) {
       try {
         List<dynamic> parsedMarkers = await _getFromServer(
-          endpoint: "/api/backup/",
+          endpoint: "/api/backup/pointer/",
         );
         // TODO replace endpoint to one which will be set up on server
         List<dynamic> parsedGroups = await _getFromServer(
-          endpoint: "/api/backup/",
+          endpoint: "/api/backup/group/",
         );
 
         // reset focused marker
@@ -272,7 +271,7 @@ class NetLoader {
               range: marker['_range'],
               queue: marker['queue'],
               actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
-              groupId: marker['groupId'],
+              groupId: marker['groupID'],
             );
           });
           // save backup to file
@@ -280,10 +279,10 @@ class NetLoader {
           if (parsedGroups.isNotEmpty){
             parsedGroups.forEach((group) {
               groupLoader.addGroup(
-                  group["Group_id"],
-                  group["name"].toString(),
-                  group["_range"],
-                  group["icon"].toString(),
+                  group['groupID'],
+                  group['name'].toString(),
+                  group['_range'],
+                  group['icon'].toString(),
                   toActionsList(List<dynamic>.from(group['Action_Name'])),
                   <String>[]
               );
@@ -391,7 +390,7 @@ class NetLoader {
       try {
         String _token = PrefService.getString('token');
 
-        print(json.encode(content));
+        //print(json.encode(content));
 
         http.Response _response = await http.post(_serverURL + endpoint,
             headers: {
