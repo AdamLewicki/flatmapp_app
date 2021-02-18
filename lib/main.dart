@@ -180,7 +180,7 @@ class _MyAppState extends State<MyApp> {
         this._locale = locale;
       });
     });
-    super.didChangeDependencies();
+     super.didChangeDependencies();
   }
   @override
   Widget build(BuildContext context) {
@@ -188,7 +188,7 @@ class _MyAppState extends State<MyApp> {
     return new DynamicTheme(
         defaultBrightness: Brightness.light,
         data: (brightness) =>
-        new ThemeData(brightness: brightness, accentColor: Colors.green),
+          new ThemeData(brightness: brightness, accentColor: Colors.green),
         themedWidgetBuilder: (context, theme) {
           return MaterialApp(
             title: 'FlatMApp',
