@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:flatmapp/resources/objects/loaders/group_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
 import 'package:flutter/cupertino.dart';
@@ -65,8 +66,8 @@ class NetLoader {
           HttpHeaders.authorizationHeader: "Token $_token",
         },
         body: json.encode(content)
-        // body:
-        );
+      // body:
+    );
     // verify response
     analyseResponse(_response);
     return _response;
@@ -151,11 +152,12 @@ class NetLoader {
   }
 
   Future<void> postBackup(
-      BuildContext context, MarkerLoader markerLoader) async {
+      BuildContext context, MarkerLoader markerLoader, GroupLoader groupLoader) async {
     bool connected = await checkNetworkConnection();
     if (connected) {
       try {
         List<Map<String, dynamic>> parsedMarkers = [];
+        List<Map<String, dynamic>> parsedGroups = [];
 
         // parse markers to form acceptable in server interface
         markerLoader.getMarkersDescriptions().forEach((key, value) {
@@ -177,16 +179,32 @@ class NetLoader {
               "icon": value.icon,
               "description": value.description,
               "queue": value.queue,
+              "groupID": value.groupId,
               // TODO determine what action_detail means
               // "action_detail": "none",
             });
           }
         });
 
+        groupLoader.getGroupsMap().forEach((key, value) {
+          parsedGroups.add({
+            "Action_Name": value.actions,
+            "_range": value.range,
+            "groupID": key,
+            "name": value.name,
+            "icon": value.icon,
+          });
+        });
+
         // send parsed markers
         await _postToServer(
-          endpoint: "/api/backup/",
+          endpoint: "/api/backup/pointer/",
           content: parsedMarkers,
+        );
+
+        await _postToServer(
+          endpoint: "/api/backup/group/",
+          content: parsedGroups,
         );
 
         showToast("Backup uploaded successfully");
@@ -221,12 +239,16 @@ class NetLoader {
 
   // odczyt znaczników z bazy
   Future<void> getBackup(
-      BuildContext context, MarkerLoader markerLoader) async {
+      BuildContext context, MarkerLoader markerLoader, GroupLoader groupLoader) async {
     bool connected = await checkNetworkConnection();
     if (connected) {
       try {
         List<dynamic> parsedMarkers = await _getFromServer(
-          endpoint: "/api/backup/",
+          endpoint: "/api/backup/pointer/",
+        );
+        // TODO replace endpoint to one which will be set up on server
+        List<dynamic> parsedGroups = await _getFromServer(
+          endpoint: "/api/backup/group/",
         );
 
         // reset focused marker
@@ -237,7 +259,7 @@ class NetLoader {
         } else {
           // remove markers from local storage
           markerLoader.removeAllMarkers();
-
+          groupLoader.removeAllGroups();
           // add markers
           parsedMarkers.forEach((marker) {
             markerLoader.addMarker(
@@ -249,16 +271,33 @@ class NetLoader {
               range: marker['_range'],
               queue: marker['queue'],
               actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
+              groupId: marker['groupID'],
             );
             int number_of_markers = PrefService.getInt('number_of_markers');
             PrefService.setInt('number_of_markers', number_of_markers + 1);
           });
-
-          markerLoader.addTemporaryMarkerAtSamePosition();
-
           // save backup to file
           markerLoader.saveMarkers();
+          if (parsedGroups.isNotEmpty){
+            parsedGroups.forEach((group) {
+              groupLoader.addGroup(
+                  group['groupID'],
+                  group['name'].toString(),
+                  group['_range'],
+                  group['icon'].toString(),
+                  toActionsList(List<dynamic>.from(group['Action_Name'])),
+                  <String>[]
+              );
+            });
+            markerLoader.getMarkersDescriptions().forEach((markerId, marker) {
+              if(marker.groupId != '')
+              {
+                groupLoader.addMarkerToGroup(marker.groupId, markerId);
+              }
+            });
 
+
+          }
           showToast("Backup downloaded successfully");
         }
       } on SocketException catch (e) {
@@ -353,7 +392,7 @@ class NetLoader {
       try {
         String _token = PrefService.getString('token');
 
-        print(json.encode(content));
+        //print(json.encode(content));
 
         http.Response _response = await http.post(_serverURL + endpoint,
             headers: {
@@ -361,8 +400,8 @@ class NetLoader {
               HttpHeaders.authorizationHeader: "Token $_token",
             },
             body: json.encode(content)
-            // body:
-            );
+          // body:
+        );
         // verify response
         analyseResponse(_response);
 
@@ -413,7 +452,7 @@ class NetLoader {
     // https://dev.to/carminezacc/advanced-flutter-networking-part-1-uploading-a-file-to-a-rest-api-from-flutter-using-a-multi-part-form-data-post-request-2ekm
     // init request
     var request =
-        new http.MultipartRequest("POST", Uri.parse(_serverURL + endpoint));
+    new http.MultipartRequest("POST", Uri.parse(_serverURL + endpoint));
 
     // add file to request
     http.MultipartFile.fromPath('backup', filepath).then((file) {
@@ -437,7 +476,7 @@ class NetLoader {
     HttpClient httpClient = new HttpClient()
       ..connectionTimeout = const Duration(seconds: 10)
       ..badCertificateCallback =
-          ((X509Certificate cert, String host, int port) => true);
+      ((X509Certificate cert, String host, int port) => true);
     return httpClient;
   }
 
@@ -463,7 +502,7 @@ class NetLoader {
     Completer completer = new Completer<String>();
 
     httpResponse.listen(
-      (data) {
+          (data) {
         byteCount += data.length;
         raf.writeFromSync(data);
       },

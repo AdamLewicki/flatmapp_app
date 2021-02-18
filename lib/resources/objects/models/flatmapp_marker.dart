@@ -12,6 +12,7 @@ class FlatMappMarker {
   String description;
   List<FlatMappAction> actions;
   int queue;
+  String groupId;
 
   FlatMappMarker(
       this.position_x,
@@ -22,7 +23,8 @@ class FlatMappMarker {
       this.description,
       this.icon,
       this.actions,
-      this.queue);
+      this.queue,
+      this.groupId);
 
   // override print
   String toString() {
@@ -36,6 +38,7 @@ class FlatMappMarker {
         '"icon": "${this.icon}", '
         '"actions": "${this.actions}", '
         '"queue": "${this.queue}", '
+        '"groupId": "${this.groupId}", '
         '}';
   }
 
@@ -57,6 +60,7 @@ class FlatMappMarker {
     this.description = marker['description'];
     this.actions = actionsFromList(marker['actions']);
     this.queue = marker['queue'];
+    this.groupId = marker['groupId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -69,7 +73,8 @@ class FlatMappMarker {
       'icon': this.icon,
       'description': this.description,
       'actions': this.actions,
-      'queue': this.queue
+      'queue': this.queue,
+      'groupId': this.groupId
     };
   }
 

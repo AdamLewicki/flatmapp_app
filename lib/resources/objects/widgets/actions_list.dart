@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flatmapp/resources/objects/loaders/actions_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/group_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
@@ -12,7 +13,7 @@ import 'package:preferences/preferences.dart';
 class ActionsList {
   MarkerLoader _markerLoader;
 
-  ActionsList(MarkerLoader markerLoader) {
+  ActionsList(MarkerLoader markerLoader, GroupLoader groupLoader) {
     this._markerLoader = markerLoader;
   }
 
@@ -27,7 +28,7 @@ class ActionsList {
               LanguagesLoader.of(context).translate("Remove action?"),
             ),
             content: Text(LanguagesLoader.of(context)
-                    .translate("You are about to remove action") +
+                .translate("You are about to remove action") +
                 ":\n" +
                 LanguagesLoader.of(context).translate(description)),
             actions: [
@@ -65,8 +66,6 @@ class ActionsList {
 
   Widget buildActionsList(BuildContext context, String id) {
 
-
-
     // actions list
     // https://stackoverflow.com/questions/53908025/flutter-sortable-drag-and-drop-listview
     // https://api.flutter.dev/flutter/material/ReorderableListView-class.html
@@ -78,85 +77,85 @@ class ActionsList {
     return Expanded(
       child: _actionsList == null
           ? Card(
-              //                           <-- Card widget
-              child: ListTile(
-                title: Text(
-                    LanguagesLoader.of(context).translate("no actions added"),
-                    style: bodyText()),
-              ),
-            )
+        //                           <-- Card widget
+        child: ListTile(
+          title: Text(
+              LanguagesLoader.of(context).translate("no actions added"),
+              style: bodyText()),
+        ),
+      )
           : ListView.builder(
-              shrinkWrap: true,
-              itemCount: _actionsList.length + 1,
-              itemBuilder: (context, index) {
-                if (index == _actionsList.length) {
-                  // add last element - card "add marker"
-                  return Container(
-                    //                           <-- Card widget
-                    child: Opacity(
-                      opacity: 0.2,
-                      child: IconButton(
-                          icon: Icon(
-                            Icons.add_circle_outline,
-                            size: 40,
-                          ),
-                          color: (PrefService.get('ui_theme') == 'dark')
-                              ? Colors.white
-                              : Colors.black,
-                          tooltip: LanguagesLoader.of(context)
-                              .translate("Add action"),
-                          onPressed: () {
-                            addAction(context, index);
-                          }),
+        shrinkWrap: true,
+        itemCount: _actionsList.length + 1,
+        itemBuilder: (context, index) {
+          if (index == _actionsList.length) {
+            // add last element - card "add marker"
+            return Container(
+              //                           <-- Card widget
+              child: Opacity(
+                opacity: 0.2,
+                child: IconButton(
+                    icon: Icon(
+                      Icons.add_circle_outline,
+                      size: 40,
                     ),
-                    alignment: Alignment(0.0, 0.0),
-                  );
-                } else {
-                  return ExpansionTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage: AssetImage(
-                          _actionsLoader.actionsMap[_actionsList[index].icon]),
+                    color: (PrefService.get('ui_theme') == 'dark')
+                        ? Colors.white
+                        : Colors.black,
+                    tooltip: LanguagesLoader.of(context)
+                        .translate("Add action"),
+                    onPressed: () {
+                      addAction(context, index);
+                    }),
+              ),
+              alignment: Alignment(0.0, 0.0),
+            );
+          } else {
+            return ExpansionTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage(
+                    _actionsLoader.actionsMap[_actionsList[index].icon]),
+              ),
+              title: Text(
+                  LanguagesLoader.of(context)
+                      .translate(_actionsList[index].icon),
+                  style: bodyText()),
+              trailing: Icon(Icons.keyboard_arrow_down),
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.edit),
+                      tooltip: LanguagesLoader.of(context)
+                          .translate("Edit parameters"),
+                      onPressed: () {
+                        // set selected marker id for map screen
+                        PrefService.setInt('selected_action', index);
+                        // Navigate to the parameters screen using a named route.
+                        Navigator.pushNamed(
+                            context, '/action_parameters');
+                      },
                     ),
-                    title: Text(
-                        LanguagesLoader.of(context)
-                            .translate(_actionsList[index].icon),
-                        style: bodyText()),
-                    trailing: Icon(Icons.keyboard_arrow_down),
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(Icons.edit),
-                            tooltip: LanguagesLoader.of(context)
-                                .translate("Edit parameters"),
-                            onPressed: () {
-                              // set selected marker id for map screen
-                              PrefService.setInt('selected_action', index);
-                              // Navigate to the parameters screen using a named route.
-                              Navigator.pushNamed(
-                                  context, '/action_parameters');
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.delete_forever),
-                            tooltip: 'Remove action',
-                            onPressed: () {
-                              // remove action with alert dialog
-                              _raiseAlertDialog(
-                                  context, id, index, _actionsList[index].name);
-                            },
-                          ),
-                        ],
-                      ),
-                      // TODO add actions list to marker card in Profile
-                      // _actionsList.buildActionsList(context, _id),
-                    ],
-                  );
-                }
-              },
-            ),
+                    IconButton(
+                      icon: Icon(Icons.delete_forever),
+                      tooltip: 'Remove action',
+                      onPressed: () {
+                        // remove action with alert dialog
+                        _raiseAlertDialog(
+                            context, id, index, _actionsList[index].name);
+                      },
+                    ),
+                  ],
+                ),
+                // TODO add actions list to marker card in Profile
+                // _actionsList.buildActionsList(context, _id),
+              ],
+            );
+          }
+        },
+      ),
     );
   }
 
