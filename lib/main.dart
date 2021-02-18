@@ -1,4 +1,5 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:flatmapp/resources/objects/loaders/group_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/language_constants.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/languages_localizations_delegate.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
@@ -8,7 +9,10 @@ import 'package:flatmapp/resources/routes/ActionsRoute.dart';
 import 'package:flatmapp/resources/routes/ChangePasswordRoute.dart';
 import 'package:flatmapp/resources/routes/CommunityIconsRoute.dart';
 import 'package:flatmapp/resources/routes/CommunityRoute.dart';
+import 'package:flatmapp/resources/routes/EditGroupRoute.dart';
 import 'package:flatmapp/resources/routes/EraseAccountRoute.dart';
+import 'package:flatmapp/resources/routes/GroupMarkersRoute.dart';
+import 'package:flatmapp/resources/routes/GroupsRoute.dart';
 import 'package:flatmapp/resources/routes/IconsRoute.dart';
 import 'package:flatmapp/resources/routes/LogInRoute.dart';
 import 'package:flatmapp/resources/routes/MapRoute.dart';
@@ -27,6 +31,8 @@ String initScreen;
 
 // data loader
 final MarkerLoader _markerLoader = MarkerLoader();
+final GroupLoader _groupLoader = GroupLoader();
+
 
 void _setUserPosition() async {
   // move temporary marker to user's location
@@ -59,6 +65,7 @@ main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PrefService.init(prefix: 'pref_');
   await GlobalConfiguration().loadFromAsset("app_settings");
+  _groupLoader.markerLoader = _markerLoader;
 
   PrefService.setDefaultValues({
     'project_description': 'FlatMapp prototype',
@@ -123,6 +130,7 @@ main() async {
   }
 
   await _markerLoader.loadMarkers();
+  await _groupLoader.loadGroups();
 
 //  // check location permission
 //  if (!(await Permission.location.request().isGranted)) {
@@ -172,7 +180,7 @@ class _MyAppState extends State<MyApp> {
         this._locale = locale;
       });
     });
-    super.didChangeDependencies();
+     super.didChangeDependencies();
   }
   @override
   Widget build(BuildContext context) {
@@ -180,7 +188,7 @@ class _MyAppState extends State<MyApp> {
     return new DynamicTheme(
         defaultBrightness: Brightness.light,
         data: (brightness) =>
-            new ThemeData(brightness: brightness, accentColor: Colors.green),
+          new ThemeData(brightness: brightness, accentColor: Colors.green),
         themedWidgetBuilder: (context, theme) {
           return MaterialApp(
             title: 'FlatMApp',
@@ -190,9 +198,9 @@ class _MyAppState extends State<MyApp> {
             locale: _locale,
             routes: {
               // When navigating to the "/name" route, build the NameRoute widget.
-              '/map': (context) => MapRoute(_markerLoader),
-              '/profile': (context) => ProfileRoute(_markerLoader),
-              '/community': (context) => CommunityRoute(_markerLoader),
+              '/map': (context) => MapRoute(_markerLoader, _groupLoader),
+              '/profile': (context) => ProfileRoute(_markerLoader, _groupLoader),
+              '/community': (context) => CommunityRoute(_markerLoader, _groupLoader),
               '/settings': (context) => SettingsRoute(),
               '/about': (context) => AboutRoute(),
               '/login': (context) => LogInRoute(),
@@ -204,8 +212,10 @@ class _MyAppState extends State<MyApp> {
               '/register': (context) => RegisterRoute(),
               '/action_parameters': (context) =>
                   ActionParametersRoute(_markerLoader),
-              '/markers': (context) => MarkersRoute(_markerLoader),
-
+              '/markers': (context) => MarkersRoute(_markerLoader, _groupLoader),
+              '/groups': (context) => GroupsRoute(_groupLoader, _markerLoader),
+              '/edit_group': (context) => EditGroupRoute(_markerLoader, _groupLoader),
+              '/group_markers': (context) => GroupMarkersRoute(_markerLoader, _groupLoader),
             },
             // TODO add all languages available here
             supportedLocales: [

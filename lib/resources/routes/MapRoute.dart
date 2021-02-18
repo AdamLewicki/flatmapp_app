@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flatmapp/resources/objects/loaders/group_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/map_helper.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
@@ -26,8 +27,9 @@ import 'UpdateMarkerLocation.dart';
 class MapRoute extends StatefulWidget {
   // data loader
   MarkerLoader _markerLoader = MarkerLoader();
+  GroupLoader _groupLoader = GroupLoader();
 
-  MapRoute(this._markerLoader, {Key key}) : super(key: key);
+  MapRoute(this._markerLoader, this._groupLoader, {Key key}) : super(key: key);
 
   @override
   _MapRouteState createState() => _MapRouteState();
@@ -46,7 +48,7 @@ class _MapRouteState extends State<MapRoute> {
   // form controllers:
   TextEditingController _formTitleController = new TextEditingController();
   TextEditingController _formQueueController =
-      new TextEditingController();
+  new TextEditingController();
   TextEditingController _formRangeController = new TextEditingController();
 
   // map style preset
@@ -118,11 +120,11 @@ class _MapRouteState extends State<MapRoute> {
       _slidingFormController.open();
 
     });
-widget._markerLoader.updateStateMethod((){
-  setState(() {
+    widget._markerLoader.updateStateMethod((){
+      setState(() {
 
-  });
-});
+      });
+    });
 
   }
 
@@ -150,8 +152,6 @@ widget._markerLoader.updateStateMethod((){
     });
 
     // notify about finished markers loading
-
-
     _initMarkers();
   }
   /// Inits [Fluster] and all the markers with network images and updates the loading state.
@@ -262,9 +262,9 @@ widget._markerLoader.updateStateMethod((){
       builder: (BuildContext context) {
         return AlertDialog(
             title:
-                Text(LanguagesLoader.of(context).translate("Remove marker?")),
+            Text(LanguagesLoader.of(context).translate("Remove marker?")),
             content: Text(LanguagesLoader.of(context)
-                    .translate("You are about to remove marker") +
+                .translate("You are about to remove marker") +
                 "\n"
                     "${_marker.title}\n"
                     "${_marker.description}."),
@@ -281,7 +281,12 @@ widget._markerLoader.updateStateMethod((){
                 child: Text(LanguagesLoader.of(context).translate("Yes")),
                 onPressed: () {
                   // remove marker
-                  widget._markerLoader.removeMarker(id: id);
+                  if(_marker.groupId == '')
+                    widget._markerLoader.removeMarker(id: id);
+                  else{
+                    widget._groupLoader.removeMarkerFromGroup(_marker.groupId, id);
+                    widget._markerLoader.removeMarker(id: id);
+                  }
                   // save markers state to file
                   widget._markerLoader.saveMarkers();
                   // dismiss alert
@@ -340,7 +345,7 @@ widget._markerLoader.updateStateMethod((){
       decoration: textFieldStyle(
           labelTextStr: LanguagesLoader.of(context).translate("Marker title"),
           hintTextStr:
-              LanguagesLoader.of(context).translate("Marker title goes here")),
+          LanguagesLoader.of(context).translate("Marker title goes here")),
       onSaved: (String value) {
         _formMarkerData['title'] = value;
         print("onsaved");
@@ -432,7 +437,7 @@ widget._markerLoader.updateStateMethod((){
       children: <Widget>[
         Tooltip(
           message:
-              LanguagesLoader.of(context).translate("marker range in meters"),
+          LanguagesLoader.of(context).translate("marker range in meters"),
           child: new Text(
             LanguagesLoader.of(context).translate("Range:"),
             style: bodyText(),
@@ -496,6 +501,16 @@ widget._markerLoader.updateStateMethod((){
     );
   }
 
+  Widget _buildGroupField(){
+    return Text(LanguagesLoader.of(context).translate("Group")
+        + widget._groupLoader
+            .getGroupNameByMarker(PrefService.getString('selected_marker'))
+        + " "
+        + widget._markerLoader
+            .getMarkerDescription(PrefService.getString('selected_marker')).groupId
+      , style: bodyText(),);
+  }
+
   void _saveMarker({LatLng p}) {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
@@ -530,12 +545,13 @@ widget._markerLoader.updateStateMethod((){
                 .position,
             icon: PrefService.getString('selected_icon'),
             title: _formMarkerData['title'].toString(),
-            description: 'description',
+            description: _formMarkerData['description'].toString(),
             range: _formMarkerData['range'].toDouble(),
             actions:
-                widget._markerLoader.getMarkerActions(id: _selectedMarkerId),
+            widget._markerLoader.getMarkerActions(id: _selectedMarkerId),
             queue: _formMarkerData['queue'] is String ?
             int.parse(_formMarkerData['queue']) : _formMarkerData['queue'],
+            groupId: '',
           );
         });
 
@@ -571,124 +587,152 @@ widget._markerLoader.updateStateMethod((){
 //    Marker tempMarker = widget._markerLoader.getGoogleMarker(
 //        id: _id
 //    );
-    ActionsList _actionsList = ActionsList(widget._markerLoader);
+    ActionsList _actionsList = ActionsList(widget._markerLoader, widget._groupLoader);
     return Form(key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(height: 10),
-              Container(
-                child: Opacity(
-                  opacity: 0.2,
-                  child: IconButton(
-                    icon: Icon(Icons.keyboard_arrow_down, size: 40,),
-                    color: (PrefService.get('ui_theme') == 'dark')
-                        ? Colors.white
-                        : Colors.black,
-                    tooltip: 'Close form',
-                    onPressed: () {
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 10),
+            Container(
+              child: Opacity(
+                opacity: 0.2,
+                child: IconButton(
+                  icon: Icon(Icons.keyboard_arrow_down, size: 40,),
+                  color: (PrefService.get('ui_theme') == 'dark')
+                      ? Colors.white
+                      : Colors.black,
+                  tooltip: 'Close form',
+                  onPressed: () {
 //                  _saveMarker();
-                      setState(() {
-                        _closePanel(context);
-                      });
-                    },
-                  ),
+                    setState(() {
+                      _closePanel(context);
+                    });
+                  },
                 ),
-                alignment: Alignment(0.0, 0.0),
               ),
-              Row(children: <Widget>[
-                PrefService.getString("selected_marker") == 'temporary'
-                    ? SizedBox.shrink()
-                    : Expanded(
-                  child: new Container(
-                    decoration: buttonFieldStyle(),
-                    margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: ListTile(
-                        title: Text(
-                            LanguagesLoader.of(context)
-                                .translate("Delete marker"),
-                            style: formButtonText()),
+              alignment: Alignment(0.0, 0.0),
+            ),
+            Row(children: <Widget>[
+              PrefService.getString("selected_marker") == 'temporary'
+                  ? SizedBox.shrink()
+                  : Expanded(
+                child: new Container(
+                  decoration: buttonFieldStyle(),
+                  margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+                  child: ListTile(
+                      title: Text(
+                          LanguagesLoader.of(context)
+                              .translate("Delete marker"),
+                          style: formButtonText()),
 //                        trailing: Icon(Icons.delete_forever),
-                        onTap: () {
-                          // set up the AlertDialog
-                          raiseAlertDialogRemoveMarker(_id);
-                        }),
-                  ),
+                      onTap: () {
+                        // set up the AlertDialog
+                        raiseAlertDialogRemoveMarker(_id);
+                      }),
                 ),
-                PrefService.getString("selected_marker") == 'temporary'
-                    ? SizedBox.shrink()
-                    : Expanded(
-                  child: new Container(
-                    decoration: buttonFieldStyle(),
-                    margin: const EdgeInsets.only(left: 0.0, right: 0.0),
-                    child: ListTile(
-                        title: Text(
-                            LanguagesLoader.of(context)
-                                .translate("Marker Position"),
-                            style: formButtonText()),
+              ),
+              PrefService.getString("selected_marker") == 'temporary'
+                  ? SizedBox.shrink()
+                  : Expanded(
+                child: new Container(
+                  decoration: buttonFieldStyle(),
+                  margin: const EdgeInsets.only(left: 0.0, right: 0.0),
+                  child: ListTile(
+                      title: Text(
+                          LanguagesLoader.of(context)
+                              .translate("Marker Position"),
+                          style: formButtonText()),
 //                        trailing: Icon(Icons.delete_forever),
-                        onTap: () {
-                          String _selectedMarkerId = PrefService.get('selected_marker');
-                          UpdateMarkerLocation asd = new UpdateMarkerLocation(widget._markerLoader
-                              .getGoogleMarker(id: _selectedMarkerId)
-                              .position, (p){
-                            // Fluttertoast.showToast(msg: "ok"+p.longitude.toString(),toastLength: Toast.LENGTH_LONG,
-                            //   gravity: ToastGravity.BOTTOM);
-                            // _saveMarker(p: p);
+                      onTap: () {
+                        String _selectedMarkerId = PrefService.get('selected_marker');
+                        UpdateMarkerLocation asd = new UpdateMarkerLocation(widget._markerLoader
+                            .getGoogleMarker(id: _selectedMarkerId)
+                            .position, (p){
+                          // Fluttertoast.showToast(msg: "ok"+p.longitude.toString(),toastLength: Toast.LENGTH_LONG,
+                          //   gravity: ToastGravity.BOTTOM);
+                          // _saveMarker(p: p);
                           updatedPosition = p;
-                          });
-                          // set up the AlertDialog
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => asd),
-                          );
-                        }),
-                  ),
+                        });
+                        // set up the AlertDialog
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => asd),
+                        );
+                      }),
                 ),
-
-                      Expanded(
-                  child: new Container(
-                    decoration: buttonFieldStyle(),
-                    margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: ListTile(
-                        title: PrefService.getString("selected_marker") ==
-                            'temporary'
-                            ? Text(
-                            LanguagesLoader.of(context)
-                                .translate("Add marker"),
-                            style: bodyText(),
-                            textAlign: TextAlign.center)
-                            : Text(
-                            LanguagesLoader.of(context)
-                                .translate("Save marker"),
-                            style: formButtonText()),
-//                        leading: Icon(Icons.bookmark_border),
-                        onTap: () {
-                          // submit form and add marker to dictionary
-                          _saveMarker();
-                        }),
-                  ),
-                ),
-              ]),
-              SizedBox(height: 10),
-              _buildMarkerNameField(context),
-              SizedBox(height: 10),
-              _buildMarkerQueueField(context),
-              SizedBox(height: 10),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  // icon change button
-                  _iconChangeButton(),
-                  SizedBox(width: 10),
-                  // range counter
-                  _buildMarkerRangeField(),
-                ],
               ),
-              SizedBox(height: 10),
 
-              Row(children: <Widget>[
+              Expanded(
+                child: new Container(
+                  decoration: buttonFieldStyle(),
+                  margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+                  child: ListTile(
+                      title: PrefService.getString("selected_marker") ==
+                          'temporary'
+                          ? Text(
+                          LanguagesLoader.of(context)
+                              .translate("Add marker"),
+                          style: bodyText(),
+                          textAlign: TextAlign.center)
+                          : Text(
+                          LanguagesLoader.of(context)
+                              .translate("Save marker"),
+                          style: formButtonText()),
+//                        leading: Icon(Icons.bookmark_border),
+                      onTap: () {
+                        // submit form and add marker to dictionary
+                        _saveMarker();
+                      }),
+                ),
+              ),
+            ]),
+            SizedBox(height: 10),
+            _buildMarkerNameField(context),
+            SizedBox(height: 10),
+            _buildGroupField(),
+            SizedBox(height: 10),
+            _buildMarkerQueueField(context),
+            SizedBox(height: 10),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                // icon change button
+                _iconChangeButton(),
+                SizedBox(width: 10),
+                // range counter
+                _buildMarkerRangeField(),
+              ],
+            ),
+            SizedBox(height: 10),
+
+            Row(children: <Widget>[
+              Expanded(
+                child: new Container(
+                    margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                    child: Divider(
+                      // color: Colors.black,
+                      // height: 36,
+                    )),
+              ),
+              Text(LanguagesLoader.of(context).translate("Actions List"),
+                  style: bodyText()),
+              Expanded(
+                child: new Container(
+                    margin: const EdgeInsets.only(left: 20.0, right: 10.0),
+                    child: Divider(
+//                    color: Colors.black,
+//                    height: 36,
+                    )),
+              ),
+            ]),
+
+
+            _actionsList.buildActionsList(
+                context, PrefService.getString("selected_marker")),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
                 Expanded(
                   child: new Container(
                       margin: const EdgeInsets.only(left: 10.0, right: 20.0),
@@ -697,34 +741,8 @@ widget._markerLoader.updateStateMethod((){
                         // height: 36,
                       )),
                 ),
-                Text(LanguagesLoader.of(context).translate("Actions List"),
-                    style: bodyText()),
-                Expanded(
-                  child: new Container(
-                      margin: const EdgeInsets.only(left: 20.0, right: 10.0),
-                      child: Divider(
-//                    color: Colors.black,
-//                    height: 36,
-                      )),
-                ),
-              ]),
-
-
-              _actionsList.buildActionsList(
-                  context, PrefService.getString("selected_marker")),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Expanded(
-                    child: new Container(
-                        margin: const EdgeInsets.only(left: 10.0, right: 20.0),
-                        child: Divider(
-                          // color: Colors.black,
-                          // height: 36,
-                        )),
-                  ),
-                ],
-              ),
+              ],
+            ),
 //          Row(
 //              children: <Widget>[
 //                Expanded(
@@ -768,8 +786,8 @@ widget._markerLoader.updateStateMethod((){
 //                ),
 //              ]
 //          ),
-            ],
-          ));
+          ],
+        ));
 
 
   }
@@ -794,93 +812,93 @@ widget._markerLoader.updateStateMethod((){
           FocusScope.of(context).requestFocus(new FocusNode());
         },
         child:  // GOOGLE MAPS
-      PrefService.get('map_enabled') != true
-          ? textInfo(
-          LanguagesLoader.of(context).translate("Map is disabled") ??
-              '')
-          : Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          // Map loading indicator
-          Opacity(
-            opacity: _isMapLoading ? 1 : 0,
-            child: Center(child: CircularProgressIndicator()),
-          ),
-
-          // Map markers loading indicator
-          if (_areMarkersLoading)
-            textInfo(LanguagesLoader.of(context)
-                .translate("Loading markers")),
-
-          SlidingUpPanel(
-            color: _preset == 'dark' ? Colors.black : Colors.white,
-            minHeight: 30,
-            maxHeight: 590,
-            padding: EdgeInsets.only(
-              left: 30,
-              right: 30,
+        PrefService.get('map_enabled') != true
+            ? textInfo(
+            LanguagesLoader.of(context).translate("Map is disabled") ??
+                '')
+            : Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            // Map loading indicator
+            Opacity(
+              opacity: _isMapLoading ? 1 : 0,
+              child: Center(child: CircularProgressIndicator()),
             ),
-            borderRadius: radius,
-            isDraggable: false,
-            defaultPanelState: PanelState.CLOSED,
-            controller: _slidingFormController,
-            panel: _markerAddForm(context),
-            body: Opacity(
-              opacity: _isMapLoading ? 0 : 1,
-              // Google Map widget
-              child: Container(
-                child: _googleMapWidget(),
+
+            // Map markers loading indicator
+            if (_areMarkersLoading)
+              textInfo(LanguagesLoader.of(context)
+                  .translate("Loading markers")),
+
+            SlidingUpPanel(
+              color: _preset == 'dark' ? Colors.black : Colors.white,
+              minHeight: 30,
+              maxHeight: 590,
+              padding: EdgeInsets.only(
+                left: 30,
+                right: 30,
               ),
-            ),
-            collapsed: InkWell(
-              onTap: () {
-                print("ok ink");
-                _mapLongPress(LatLng(0, 0));
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color:
-                  _preset == 'dark' ? Colors.black : Colors.white,
-                  // color: Colors.green,
-                  borderRadius: radius,
+              borderRadius: radius,
+              isDraggable: false,
+              defaultPanelState: PanelState.CLOSED,
+              controller: _slidingFormController,
+              panel: _markerAddForm(context),
+              body: Opacity(
+                opacity: _isMapLoading ? 0 : 1,
+                // Google Map widget
+                child: Container(
+                  child: _googleMapWidget(),
                 ),
-                child: Center(
-                  child: Text(
-                    // PrefService.getString('selected_marker') == 'temporary' ? "Tap here to add marker" : "Tap here to modify marker",
-                    LanguagesLoader.of(context).translate(
-                        "Tap here to create or modify markers"),
-                    style: bodyText(),
+              ),
+              collapsed: InkWell(
+                onTap: () {
+                  print("ok ink");
+                  _mapLongPress(LatLng(0, 0));
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color:
+                    _preset == 'dark' ? Colors.black : Colors.white,
+                    // color: Colors.green,
+                    borderRadius: radius,
+                  ),
+                  child: Center(
+                    child: Text(
+                      // PrefService.getString('selected_marker') == 'temporary' ? "Tap here to add marker" : "Tap here to modify marker",
+                      LanguagesLoader.of(context).translate(
+                          "Tap here to create or modify markers"),
+                      style: bodyText(),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),),
+          ],
+        ),),
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
-    //   drawer: new Drawer(
-    // child: new ListView(
-    // padding: EdgeInsets.zero,
-    //   children: <Widget>[
-    //     DrawerHeader(
-    //       child: Text('Drawer Header'),
-    //       decoration: BoxDecoration(
-    //         color: Colors.blue,
-    //       ),
-    //     ),
-    //     ListTile(
-    //       title: Text('Item 1'),
-    //       onTap: () {
-    //         //Do some stuff here
-    //         //Closing programmatically - very less practical use
-    //         scaffoldKey.currentState.openEndDrawer();
-    //       },
-    //     )
-    //   ],
-    // ),
-    // ),
+      //   drawer: new Drawer(
+      // child: new ListView(
+      // padding: EdgeInsets.zero,
+      //   children: <Widget>[
+      //     DrawerHeader(
+      //       child: Text('Drawer Header'),
+      //       decoration: BoxDecoration(
+      //         color: Colors.blue,
+      //       ),
+      //     ),
+      //     ListTile(
+      //       title: Text('Item 1'),
+      //       onTap: () {
+      //         //Do some stuff here
+      //         //Closing programmatically - very less practical use
+      //         scaffoldKey.currentState.openEndDrawer();
+      //       },
+      //     )
+      //   ],
+      // ),
+      // ),
     );
   }
 
